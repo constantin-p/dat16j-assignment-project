@@ -1,0 +1,13 @@
+*.class
+
+# IntelliJ:
+/out/
+
+# User-specific stuff:
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/project-template.xml
+.idea/dictionaries/
+
+# OS Files
+*.DS_Store
