@@ -48,7 +48,10 @@
             <Insets bottom="8.0" right="15.0" top="8.0" />
          </padding>
       </HBox>
-      <Button mnemonicParsing="false" text="Create" GridPane.rowIndex="2">
+      <Button fx:id="selectorCreateButton"
+              mnemonicParsing="false"
+              text="Create"
+              GridPane.rowIndex="2">
          <GridPane.margin>
             <Insets left="15.0" />
          </GridPane.margin>
