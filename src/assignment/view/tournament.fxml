@@ -81,6 +81,7 @@
                                                 VBox.vgrow="ALWAYS"/>
 
                                         <Button
+                                                fx:id="selectorAddTeam"
                                                 mnemonicParsing="false"
                                                 text="Add team"
                                                 onAction="#addTeamAction">

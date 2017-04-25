@@ -43,18 +43,18 @@ public class TournamentController {
 
         teamListView.setItems(tournament.getTeams());
 
-        teamListView.setCellFactory(param -> new ListCell<Team>() {
-            @Override
-            protected void updateItem(Team item, boolean empty) {
-                super.updateItem(item, empty);
-
-                if (empty || item == null || item.getName() == null) {
-                    setText(null);
-                } else {
-                    setText(item.getName());
-                }
-            }
-        });
+//        teamListView.setCellFactory(param -> new ListCell<Team>() {
+//            @Override
+//            protected void updateItem(Team item, boolean empty) {
+//                super.updateItem(item, empty);
+//
+//                if (empty || item == null || item.getName() == null) {
+//                    setText(null);
+//                } else {
+//                    setText(item.getName());
+//                }
+//            }
+//        });
     }
 
 
@@ -84,9 +84,12 @@ public class TournamentController {
 
     @FXML
     public void addTeamAction(ActionEvent event) {
-        tournament.addTeam(new Team("testTeam"));
+//        tournament.addTeam(new Team("testTeam"));
 
-        this.rootCtrl.showTeamSelector();
+        Team selectedTeam = this.rootCtrl.showTeamSelector(null);
+        if (selectedTeam != null) {
+            tournament.addTeam(selectedTeam);
+        }
     }
 
 

@@ -1,6 +1,7 @@
 package assignment.core;
 
 import assignment.Main;
+import assignment.model.Team;
 import assignment.model.Tournament;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -71,27 +72,62 @@ public class RootController {
    }
 
 
-    protected void showTeamSelector() {
+//    TODO: move show* to a new Dispatcher class
+    protected Team showTeamSelector(Stage stage) {
+        Stage parentStage = (stage != null)
+                ? stage
+                : app.primaryStage;
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/selector.fxml"));
-
-            TeamSelectorController controller = new TeamSelectorController();
-            loader.setController(controller);
-
-            Parent layout = loader.load();
-
 
             // Create the dialog Stage.
             Stage dialogStage = new Stage();
             dialogStage.setTitle("Select a team");
             dialogStage.initModality(Modality.WINDOW_MODAL);
-            dialogStage.initOwner(app.primaryStage);
+            dialogStage.initOwner(parentStage);
+
+            TeamSelectorController controller = new TeamSelectorController(this, dialogStage);
+            loader.setController(controller);
+
+            Parent layout = loader.load();
             dialogStage.setScene(new Scene(layout));
 
             // Show the dialog and wait until the user closes it
             dialogStage.showAndWait();
+
+            return controller.result();
         } catch (IOException e) {
             e.printStackTrace();
+            return null;
+        }
+    }
+
+    protected Team showTeamForm(Stage stage) {
+        Stage parentStage = (stage != null)
+                ? stage
+                : app.primaryStage;
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/team-form.fxml"));
+
+            // Create the dialog Stage.
+            Stage dialogStage = new Stage();
+            dialogStage.setTitle("New team");
+            dialogStage.initModality(Modality.WINDOW_MODAL);
+            dialogStage.initOwner(parentStage);
+
+            TeamFormController controller = new TeamFormController(this, dialogStage, new Team(""));
+            loader.setController(controller);
+
+            Parent layout = loader.load();
+            dialogStage.setScene(new Scene(layout));
+
+            // Show the dialog and wait until the user closes it
+            dialogStage.showAndWait();
+
+            return controller.result();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
         }
     }
 
