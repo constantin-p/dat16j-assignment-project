@@ -16,6 +16,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 
 
 <SplitPane
@@ -48,24 +49,50 @@
                                         <Label text="Name" />
                                         <TextField
                                             disable="true"
-                                            fx:id="nameTextField"
+                                            fx:id="infoNameTextField"
                                             GridPane.rowIndex="1"/>
                                         <HBox
                                           GridPane.rowIndex="3">
                                            <children>
-                                                <Button 
+                                                <Button fx:id="infoEditButton"
                                                     mnemonicParsing="false"
-                                                    text="Edit" />
-                                                <Button
+                                                    text="Edit"
+                                                    onAction="#editTournamentInfoAction"/>
+                                               <Button fx:id="infoSaveButton"
+                                                       mnemonicParsing="false"
+                                                       text="Save"
+                                                       onAction="#saveTournamentInfoAction"
+                                                       visible="false"/>
+                                                <Button fx:id="infoDeleteButton"
                                                     mnemonicParsing="false"
-                                                    text="Delete" />
+                                                    text="Delete Tournament"
+                                                        onAction="#deleteTournamentAction"/>
                                            </children>
                                         </HBox>
                                     </children>
                                 </GridPane>
                             </content>
                         </Tab>
-                        <Tab text="Teams" />
+                        <Tab text="Teams">
+                            <content>
+                                <VBox>
+                                    <children>
+                                        <ListView fx:id="teamListView"
+                                                VBox.vgrow="ALWAYS"/>
+
+                                        <Button
+                                                fx:id="selectorAddTeam"
+                                                mnemonicParsing="false"
+                                                text="Add team"
+                                                onAction="#addTeamAction">
+                                            <VBox.margin>
+                                                <Insets top="15.0" left="15.0"/>
+                                            </VBox.margin>
+                                        </Button>
+                                    </children>
+                                </VBox>
+                            </content>
+                        </Tab>
                     </tabs>
                 </TabPane>
             </children>

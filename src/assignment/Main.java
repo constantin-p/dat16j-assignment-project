@@ -1,5 +1,6 @@
 package assignment;
 
+import assignment.core.RootController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -10,9 +11,7 @@ import java.io.IOException;
 
 public class Main extends Application {
 
-    private Stage primaryStage;
-    private Parent rootLayout;
-
+    public Stage primaryStage;
 
 
 
@@ -27,9 +26,15 @@ public class Main extends Application {
 
     public void initRootLayout() {
         try {
-            rootLayout = (Parent) FXMLLoader.load(getClass().getResource("view/root.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("view/root.fxml"));
+            Parent layout = loader.load();
 
-            primaryStage.setScene(new Scene(rootLayout));
+            primaryStage.setScene(new Scene(layout));
+
+            RootController controller = loader.<RootController>getController();
+            controller.initData(this);
+
+
             primaryStage.setMinHeight(300);
             primaryStage.setMinWidth(400);
             primaryStage.show();

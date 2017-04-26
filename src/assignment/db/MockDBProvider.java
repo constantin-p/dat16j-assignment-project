@@ -1,37 +1,21 @@
-package assignment.model;
+package assignment.db;
 
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import assignment.model.Team;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-public class Tournament {
+public class MockDBProvider {
 
-    private StringProperty name;
     public ObservableList<Team> teams = FXCollections.observableArrayList();
 
-    public Tournament (String name) {
-        this.name = new SimpleStringProperty(name);
 
+    public MockDBProvider() {
         this.teams.add(new Team("team 1"));
         this.teams.add(new Team("team 2"));
         this.teams.add(new Team("team 3"));
         this.teams.add(new Team("team 4"));
         this.teams.add(new Team("team 5"));
         this.teams.add(new Team("team 6"));
-    }
-
-
-    public String getName() {
-        return name.get();
-    }
-
-    public StringProperty nameProperty() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name.set(name);
     }
 
     public ObservableList<Team> getTeams() {
@@ -42,10 +26,11 @@ public class Tournament {
         this.teams = teams;
     }
 
-
-
     public void addTeam(Team team) {
         this.getTeams().add(team);
     }
 
+    public void selectorAddTeam(Team team) {
+        this.getTeams().add(team);
+    }
 }
