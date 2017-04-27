@@ -1,5 +1,6 @@
 package assignment.db;
 
+import assignment.model.Player;
 import assignment.model.Team;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -7,16 +8,10 @@ import javafx.collections.ObservableList;
 public class MockDBProvider {
 
     public ObservableList<Team> teams = FXCollections.observableArrayList();
+    public ObservableList<Player> players = FXCollections.observableArrayList();
 
 
-    public MockDBProvider() {
-        this.teams.add(new Team("team 1"));
-        this.teams.add(new Team("team 2"));
-        this.teams.add(new Team("team 3"));
-        this.teams.add(new Team("team 4"));
-        this.teams.add(new Team("team 5"));
-        this.teams.add(new Team("team 6"));
-    }
+    public MockDBProvider() {}
 
     public ObservableList<Team> getTeams() {
         return teams;
@@ -26,11 +21,20 @@ public class MockDBProvider {
         this.teams = teams;
     }
 
-    public void addTeam(Team team) {
-        this.getTeams().add(team);
+    public ObservableList<Player> getPlayers() {
+        return players;
     }
 
-    public void selectorAddTeam(Team team) {
-        this.getTeams().add(team);
+    public void setPlayers(ObservableList<Player> players) {
+        this.players = players;
+    }
+
+
+    public void addTeam(Team team) {
+        getTeams().add(team);
+    }
+
+    public void addPlayer(Player player) {
+        getPlayers().add(player);
     }
 }

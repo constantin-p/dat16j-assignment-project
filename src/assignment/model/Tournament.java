@@ -12,13 +12,6 @@ public class Tournament {
 
     public Tournament (String name) {
         this.name = new SimpleStringProperty(name);
-
-        this.teams.add(new Team("team 1"));
-        this.teams.add(new Team("team 2"));
-        this.teams.add(new Team("team 3"));
-        this.teams.add(new Team("team 4"));
-        this.teams.add(new Team("team 5"));
-        this.teams.add(new Team("team 6"));
     }
 
 
@@ -47,5 +40,4 @@ public class Tournament {
     public void addTeam(Team team) {
         this.getTeams().add(team);
     }
-
 }

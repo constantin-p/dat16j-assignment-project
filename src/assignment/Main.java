@@ -18,10 +18,9 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception{
         this.primaryStage = primaryStage;
-        this.primaryStage.setTitle("TODO: Change this title based on the selected tab");
+        this.primaryStage.setTitle("Tournaments app");
 
         initRootLayout();
-//        showTournamentsUI();
     }
 
     public void initRootLayout() {
@@ -42,25 +41,6 @@ public class Main extends Application {
             e.printStackTrace();
         }
     }
-
-//    public void showTournamentsUI() {
-//        try {
-//            // Load person overview.
-//            FXMLLoader loader = new FXMLLoader();
-//            loader.setLocation(MainApp.class.getResource("view/PersonOverview.fxml"));
-//            AnchorPane personOverview = (AnchorPane) loader.load();
-//
-//            // Load root layout from fxml file.
-//            rootLayout = (BorderPane) FXMLLoader.load(getClass().getResource("view/root.fxml"));
-//
-//            // Set person overview into the center of root layout.
-//            rootLayout.setCenter(personOverview);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
-
-
 
     public static void main(String[] args) {
         launch(args);

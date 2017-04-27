@@ -5,63 +5,61 @@ import assignment.model.Team;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.control.ListView;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.stage.Stage;
 
-// TODO: Extend modal class [resolve, constructor]
-public class TeamSelectorController {
+public class TeamSelectorController extends ModalBaseController {
 
     private MockDBProvider mockDB;
-    private RootController rootCtrl;
-    private Stage stage;
-
-    private boolean isOKClicked = false;
 
     @FXML
     private Button selectorCreateButton;
 
     @FXML
-    private ListView<Team> selectorListView;
+    private TableView<Team> selectorTableView;
 
-    public TeamSelectorController(RootController rootCtrl, Stage stage) {
-        this.rootCtrl = rootCtrl;
-        this.stage = stage;
+    public TeamSelectorController(ModalDispatcher modalDispatcher, Stage stage) {
+        super(modalDispatcher, stage);
         this.mockDB = new MockDBProvider();
     }
 
-    @FXML
-    private void initialize() {
-
+    @Override
+    protected void initialize() {
+        super.initialize();
 
         selectorCreateButton.setText("New team");
 
-        selectorListView.setItems(mockDB.getTeams());
+        TableColumn<Team, String> nameColumn = new TableColumn("Name");
+        TableColumn playersColumn = new TableColumn("Players");
+        TableColumn<Team, String> playerAColumn = new TableColumn("A");
+        TableColumn<Team, String> playerBColumn = new TableColumn("B");
+
+
+        selectorTableView.getColumns().addAll(nameColumn, playersColumn);
+        playersColumn.getColumns().addAll(playerAColumn, playerBColumn);
+
+        nameColumn.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
+        playerAColumn.setCellValueFactory(cellData -> cellData.getValue().getPlayerA().firstNameProperty());
+        playerBColumn.setCellValueFactory(cellData -> cellData.getValue().getPlayerB().firstNameProperty());
+        selectorTableView.setItems(mockDB.getTeams());
     }
 
-    protected Team result() {
-        Team selectedTeam = selectorListView.getSelectionModel().getSelectedItem();
-        if (isOKClicked && selectedTeam != null) {
+    @Override
+    public Team result() {
+        Team selectedTeam = selectorTableView.getSelectionModel().getSelectedItem();
+        if (super.isOKClicked() && selectedTeam != null) {
             return selectedTeam;
         }
         return null;
     }
 
-    @FXML
-    public void handleCancelAction(ActionEvent event) {
-        stage.close();
-    }
-
-    @FXML
-    public void handleOKAction(ActionEvent event) {
-        isOKClicked = true;
-        stage.close();
-    }
-
+    // FXML Action handlers
     @FXML
     public void handleCreateAction(ActionEvent event){
-        Team selectedTeam = this.rootCtrl.showTeamForm(stage);
+        Team selectedTeam = super.modalDispatcher.showCreateTeamModal(super.stage);
         if (selectedTeam != null) {
-            mockDB.getTeams().add(selectedTeam);
+            mockDB.addTeam(selectedTeam);
         }
     }
 }

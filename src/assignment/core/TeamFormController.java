@@ -1,51 +1,101 @@
 package assignment.core;
 
+import assignment.model.Player;
 import assignment.model.Team;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
+import assignment.core.Response;
 
-public class TeamFormController extends ModalController {
+public class TeamFormController extends ModalBaseController {
 
     private Team team;
 
     @FXML
-    private TextField teamNameTextField;
-
-    @FXML
     private Label teamErrorLabel;
 
-    public TeamFormController(RootController rootCtrl, Stage stage, Team team) {
-        super(rootCtrl, stage);
+    @FXML
+    private TextField teamNameTextField;
+    private BooleanProperty isTeamNameValid = new SimpleBooleanProperty(false);
+
+    @FXML
+    private Button teamSelectPlayerAButton;
+    private BooleanProperty isTeamPlayerAValid = new SimpleBooleanProperty(false);
+
+    @FXML
+    private Button teamSelectPlayerBButton;
+    private BooleanProperty isTeamPlayerBValid = new SimpleBooleanProperty(false);
+
+    public TeamFormController(ModalDispatcher modalDispatcher, Stage stage, Team team) {
+        super(modalDispatcher, stage);
         this.team = team;
     }
 
     @Override
     protected void initialize() {
         super.initialize();
-        teamNameTextField.setText(team.getName());
 
-        // TODO: Validation
+        super.isDisabledProperty().bind(
+                isTeamNameValid.not().or(
+                        isTeamPlayerAValid.not().or(
+                                isTeamPlayerBValid.not()
+                        )
+                )
+        );
+
+        teamNameTextField.textProperty().bindBidirectional(team.nameProperty());
         teamNameTextField.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (!teamNameTextField.getText().matches("[a-zA-Z0-9 ]+")) {
-                teamErrorLabel.setText("Invalid team name");
-                teamErrorLabel.setVisible(true);
-                super.setIsDisabled(true);
-            } else {
-                teamErrorLabel.setVisible(false);
-                super.setIsDisabled(false);
-            }
+            isTeamNameValid.set(ValidationHandler.validateControl(teamNameTextField,
+                    teamErrorLabel, ValidationHandler.validateTeamName(newValue)));
+
         });
     }
 
     @Override
-    protected Team result() {
+    public Team result() {
         if (super.isOKClicked() && !super.isDisabled()) {
-            this.team.setName(this.teamNameTextField.getText());
             return this.team;
         }
         return null;
+    }
+
+    // FXML Action handlers
+    @FXML
+    public void handleSelectPlayerAAction(ActionEvent event){
+        Player selectedPlayer = super.modalDispatcher.showSelectPlayerModal(super.stage);
+        Response validation = ValidationHandler.validateTeamPlayer(selectedPlayer);
+
+        if (validation.success) {
+            team.setPlayerA(selectedPlayer);
+            teamSelectPlayerAButton.setText(selectedPlayer.getFirstName() + " " + selectedPlayer.getLastName());
+        } else {
+            teamSelectPlayerAButton.setText("Select player");
+        }
+
+        isTeamPlayerAValid.set(ValidationHandler.validateControl(teamSelectPlayerAButton,
+                teamErrorLabel, validation));
+    }
+
+    @FXML
+    public void handleSelectPlayerBAction(ActionEvent event){
+        // TODO: blacklist existing players
+        Player selectedPlayer = super.modalDispatcher.showSelectPlayerModal(super.stage);
+        Response validation = ValidationHandler.validateTeamPlayer(selectedPlayer);
+
+        if (validation.success) {
+            team.setPlayerB(selectedPlayer);
+            teamSelectPlayerBButton.setText(selectedPlayer.getFirstName() + " " + selectedPlayer.getLastName());
+        } else {
+            teamSelectPlayerBButton.setText("Select player");
+        }
+
+        isTeamPlayerBValid.set(ValidationHandler.validateControl(teamSelectPlayerBButton,
+                teamErrorLabel, validation));
     }
 }

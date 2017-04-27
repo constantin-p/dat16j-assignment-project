@@ -28,46 +28,163 @@
         <AnchorPane
             minWidth="160.0">
             <children>
-                <TabPane layoutX="-13.0" layoutY="99.0" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                <TabPane
+                    layoutX="-13.0"
+                    layoutY="99.0"
+                    prefHeight="200.0"
+                    prefWidth="200.0"
+                    tabClosingPolicy="UNAVAILABLE"
+                    AnchorPane.bottomAnchor="0.0"
+                    AnchorPane.leftAnchor="0.0"
+                    AnchorPane.rightAnchor="0.0"
+                    AnchorPane.topAnchor="0.0">
                     <tabs>
                         <Tab text="Info">
                             <content>
-                                <GridPane hgap="10.0" vgap="10.0">
+                                <GridPane
+                                    hgap="0.0"
+                                    stylesheets="@validation.css">
                                     <columnConstraints>
-                                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                                        <ColumnConstraints
+                                            hgrow="NEVER"
+                                            maxWidth="15.0"
+                                            minWidth="15.0"
+                                            prefWidth="15.0" />
+                                        <ColumnConstraints
+                                            hgrow="SOMETIMES"
+                                            minWidth="100.0"
+                                            prefWidth="160.0" />
+                                        <ColumnConstraints
+                                            hgrow="NEVER"
+                                            maxWidth="15.0"
+                                            minWidth="15.0"
+                                            prefWidth="15.0" />
                                     </columnConstraints>
                                     <rowConstraints>
-                                        <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                        <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                        <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-                                        <RowConstraints maxHeight="30.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                        <RowConstraints
+                                            fillHeight="false"
+                                            minHeight="15.0"
+                                            prefHeight="15.0"
+                                            vgrow="NEVER" />
+                                        <RowConstraints
+                                            fillHeight="false"
+                                            minHeight="30.0"
+                                            prefHeight="30.0"
+                                            vgrow="NEVER" />
+                                        <RowConstraints
+                                            fillHeight="false"
+                                            minHeight="30.0"
+                                            prefHeight="30.0"
+                                            vgrow="NEVER" />
+                                        <RowConstraints
+                                            fillHeight="false"
+                                            minHeight="30.0"
+                                            prefHeight="30.0"
+                                            vgrow="NEVER" />
+                                        <RowConstraints
+                                            fillHeight="false"
+                                            minHeight="15.0"
+                                            prefHeight="15.0"
+                                            vgrow="NEVER" />
+                                        <RowConstraints 
+                                            fillHeight="false"
+                                            minHeight="30.0"
+                                            prefHeight="30.0"
+                                            vgrow="NEVER" />
+                                        <RowConstraints
+                                            fillHeight="false"
+                                            minHeight="15.0"
+                                            prefHeight="15.0"
+                                            vgrow="NEVER" />
+                                        <RowConstraints
+                                            fillHeight="false"
+                                            minHeight="30.0"
+                                            prefHeight="30.0"
+                                            vgrow="NEVER" />
+                                        <RowConstraints
+                                            minHeight="15.0"
+                                            prefHeight="15.0"
+                                            vgrow="NEVER" />
+                                        <RowConstraints
+                                            fillHeight="false"
+                                            minHeight="30.0"
+                                            prefHeight="43.0"
+                                            vgrow="ALWAYS" />
+                                        <RowConstraints
+                                            fillHeight="false"
+                                            maxHeight="15.0"
+                                            minHeight="15.0"
+                                            prefHeight="15.0"
+                                            vgrow="NEVER" />
                                     </rowConstraints>
-                                    <padding>
-                                        <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
-                                    </padding>
                                     <children>
-                                        <Label text="Name" />
-                                        <TextField
+                                        <Label fx:id="infoErrorLabel"
+                                            styleClass="error-label"
+                                            text="INFO LABEL"
+                                            GridPane.columnIndex="1"
+                                            GridPane.rowIndex="1" />
+                                        <Label
+                                            text="Tournament name:"
+                                            GridPane.columnIndex="1"
+                                            GridPane.rowIndex="2"
+                                            GridPane.valignment="BOTTOM">
+                                            <padding>
+                                                <Insets
+                                                    bottom="3.0" />
+                                            </padding>
+                                        </Label>
+                                        <TextField fx:id="infoNameTextField"
                                             disable="true"
-                                            fx:id="infoNameTextField"
-                                            GridPane.rowIndex="1"/>
+                                            GridPane.columnIndex="1"
+                                            GridPane.rowIndex="3" />
+                                        <Button
+                                            text="Delete tournament"
+                                            onAction="#handleDeleteAction"
+                                            maxWidth="1.7976931348623157E308"
+                                            mnemonicParsing="false"
+                                            GridPane.columnIndex="1"
+                                            GridPane.rowIndex="5" />
+                                        <Button
+                                            text="Start tournament"
+                                            onAction="#handleStartAction"
+                                            maxWidth="1.7976931348623157E308"
+                                            mnemonicParsing="false"
+                                            GridPane.columnIndex="1"
+                                            GridPane.rowIndex="7" />
                                         <HBox
-                                          GridPane.rowIndex="3">
-                                           <children>
+                                            alignment="CENTER_RIGHT"
+                                            GridPane.columnIndex="1"
+                                            GridPane.rowIndex="9">
+                                            <children>
+                                                <Button fx:id="infoCancelButton"
+                                                    text="Cancel"
+                                                    onAction="#handleCancelAction"
+                                                    visible="false"
+                                                    mnemonicParsing="false" />
+                                                <Button fx:id="infoSaveButton"
+                                                    text="Save"
+                                                    onAction="#handleSaveAction"
+                                                    visible="false"
+                                                    mnemonicParsing="false">
+                                                    <HBox.margin>
+                                                        <Insets left="15.0" />
+                                                    </HBox.margin>
+                                                </Button>
                                                 <Button fx:id="infoEditButton"
-                                                    mnemonicParsing="false"
                                                     text="Edit"
-                                                    onAction="#editTournamentInfoAction"/>
-                                               <Button fx:id="infoSaveButton"
-                                                       mnemonicParsing="false"
-                                                       text="Save"
-                                                       onAction="#saveTournamentInfoAction"
-                                                       visible="false"/>
-                                                <Button fx:id="infoDeleteButton"
-                                                    mnemonicParsing="false"
-                                                    text="Delete Tournament"
-                                                        onAction="#deleteTournamentAction"/>
-                                           </children>
+                                                    onAction="#handleEditAction"
+                                                    mnemonicParsing="false">
+                                                   <HBox.margin>
+                                                      <Insets
+                                                        left="15.0" />
+                                                   </HBox.margin>
+                                                </Button>
+                                            </children>
+                                            <padding>
+                                                <Insets
+                                                    bottom="8.0"
+                                                    top="8.0" />
+                                            </padding>
                                         </HBox>
                                     </children>
                                 </GridPane>
@@ -75,22 +192,70 @@
                         </Tab>
                         <Tab text="Teams">
                             <content>
-                                <VBox>
+                              <GridPane
+                                    hgap="0.0"
+                                    stylesheets="@validation.css">
+                                    <columnConstraints>
+                                        <ColumnConstraints
+                                            hgrow="NEVER"
+                                            maxWidth="15.0"
+                                            minWidth="15.0"
+                                            prefWidth="15.0" />
+                                        <ColumnConstraints
+                                            hgrow="SOMETIMES"
+                                            minWidth="100.0"
+                                            prefWidth="160.0" />
+                                        <ColumnConstraints
+                                            hgrow="NEVER"
+                                            maxWidth="15.0"
+                                            minWidth="15.0"
+                                            prefWidth="15.0" />
+                                    </columnConstraints>
+                                    <rowConstraints>
+                                        <RowConstraints
+                                            fillHeight="false"
+                                            minHeight="50.0"
+                                            prefHeight="200.0"
+                                            vgrow="ALWAYS" />
+
+                                        <RowConstraints
+                                            minHeight="15.0"
+                                            prefHeight="15.0"
+                                            vgrow="NEVER" />
+                                        <RowConstraints
+                                            fillHeight="false"
+                                            minHeight="30.0"
+                                            prefHeight="43.0"
+                                            vgrow="SOMETIMES" />
+                                        <RowConstraints
+                                            fillHeight="false"
+                                            maxHeight="15.0"
+                                            minHeight="15.0"
+                                            prefHeight="15.0"
+                                            vgrow="NEVER" />
+                                    </rowConstraints>
                                     <children>
                                         <ListView fx:id="teamListView"
-                                                VBox.vgrow="ALWAYS"/>
-
-                                        <Button
-                                                fx:id="selectorAddTeam"
-                                                mnemonicParsing="false"
-                                                text="Add team"
-                                                onAction="#addTeamAction">
-                                            <VBox.margin>
-                                                <Insets top="15.0" left="15.0"/>
-                                            </VBox.margin>
-                                        </Button>
+                                            minHeight="200.0"
+                                            GridPane.columnSpan="2147483647" />
+                                        <HBox
+                                            alignment="CENTER_RIGHT"
+                                            GridPane.columnIndex="1"
+                                            GridPane.rowIndex="2">
+                                            <children>
+                                                <Button
+                                                    text="Add team"
+                                                    onAction="#handleAddAction"
+                                                    mnemonicParsing="false" />
+                                            </children>
+                                            <padding>
+                                                <Insets
+                                                    bottom="8.0"
+                                                    top="8.0" />
+                                            </padding>
+                                        </HBox>
                                     </children>
-                                </VBox>
+                                </GridPane>
                             </content>
                         </Tab>
                     </tabs>
