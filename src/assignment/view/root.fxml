@@ -24,33 +24,46 @@
                 <Menu mnemonicParsing="false" text="File">
                     <items>
                         <MenuItem
-                            mnemonicParsing="false"
                             text="New Tournament"
-                            onAction="#handleNewTournamentAction"/>
+                            onAction="#handleNewTournamentAction"
+                            mnemonicParsing="false" />
                         <MenuItem
-                            mnemonicParsing="false"
-                            text="New Team | x"/>
+                            text="New Team | x"
+                            mnemonicParsing="false" />
                         
                         <MenuItem
-                            mnemonicParsing="false"
-                            text="New Player | x"/>
+                            text="New Player | x"
+                            mnemonicParsing="false" />
                     </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Edit">
                     <items>
                         <MenuItem
-                            mnemonicParsing="false"
-                            text="Edit Team | x"/>
+                            text="Edit Team | x"
+                            mnemonicParsing="false" />
                         <MenuItem
-                            mnemonicParsing="false"
-                            text="Delete Team | x"/>
+                            text="Delete Team | x"
+                            mnemonicParsing="false" />
                         <SeparatorMenuItem mnemonicParsing="false" />
                         <MenuItem
-                            mnemonicParsing="false"
-                            text="Edit Player | x"/>
+                            text="Edit Player | x"
+                            mnemonicParsing="false" />
                         <MenuItem
-                            mnemonicParsing="false"
-                            text="Delete Player | x"/>
+                            text="Delete Player | x"
+                            mnemonicParsing="false" />
+                    </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Account">
+                    <items>
+                        <MenuItem fx:id="usernameMenuItem"
+                            text="username"
+                            disable="true"
+                            mnemonicParsing="false" />
+                        <SeparatorMenuItem mnemonicParsing="false" />
+                        <MenuItem
+                            text="Sign out"
+                            onAction="#handleSignOutAction"
+                            mnemonicParsing="false" />
                     </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Help">
@@ -73,7 +86,7 @@
             maxHeight="26.0"
             VBox.vgrow="NEVER">
             <children>
-                <Label 
+                <Label fx:id="statusLabel"
                     text="Connection status: OK"/>
             </children>
             <padding>

@@ -17,7 +17,8 @@ import java.io.IOException;
 public class Main extends Application {
 
     public Stage primaryStage;
-    private AuthManager authManager = new AuthManager();
+    private AuthManager authManager = new AuthManager(() -> initRootLayout(),
+            () -> initAuthLoginLayout(), () -> initAuthRegisterLayout());
 
 
     @Override
@@ -48,11 +49,13 @@ public class Main extends Application {
             primaryStage.setScene(new Scene(layout));
 
             RootController controller = loader.getController();
-            controller.initData(this);
+            controller.initData(authManager, this.primaryStage);
 
             this.primaryStage.setTitle("Tournaments app");
-            primaryStage.setMinHeight(300);
-            primaryStage.setMinWidth(400);
+            primaryStage.setMinHeight(400);
+            primaryStage.setMaxHeight(Double.MAX_VALUE);
+            primaryStage.setMinWidth(600);
+            primaryStage.setMaxWidth(Double.MAX_VALUE);
 
             primaryStage.show();
         } catch (IOException e) {
@@ -68,11 +71,13 @@ public class Main extends Application {
             primaryStage.setScene(new Scene(layout));
 
             LoginController controller = loader.getController();
-            controller.initData(authManager, () -> initAuthRegisterLayout(), () -> initRootLayout());
+            controller.initData(authManager);
 
             this.primaryStage.setTitle("Login");
             primaryStage.setMinHeight(300);
-            primaryStage.setMinWidth(300);
+            primaryStage.setMaxHeight(400);
+            primaryStage.setMinWidth(260);
+            primaryStage.setMaxWidth(260);
 
             primaryStage.show();
         } catch (IOException e) {
@@ -88,11 +93,13 @@ public class Main extends Application {
             primaryStage.setScene(new Scene(layout));
 
             RegisterController controller = loader.getController();
-            controller.initData(authManager, () -> initAuthLoginLayout());
+            controller.initData(authManager);
 
-            this.primaryStage.setTitle("Login");
+            this.primaryStage.setTitle("Register");
             primaryStage.setMinHeight(300);
-            primaryStage.setMinWidth(300);
+            primaryStage.setMaxHeight(400);
+            primaryStage.setMinWidth(260);
+            primaryStage.setMaxWidth(260);
 
             primaryStage.show();
         } catch (IOException e) {

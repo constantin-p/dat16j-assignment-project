@@ -14,7 +14,6 @@ import javafx.scene.control.TextField;
 public class RegisterController {
 
     private AuthManager authManager;
-    private Runnable initLoginLayout;
 
     @FXML
     private Label registerErrorLabel;
@@ -62,9 +61,8 @@ public class RegisterController {
         });
     }
 
-    public void initData(AuthManager authManager, Runnable initLoginLayout) {
+    public void initData(AuthManager authManager) {
         this.authManager = authManager;
-        this.initLoginLayout = initLoginLayout;
     }
 
     // FXML Action handlers
@@ -74,12 +72,12 @@ public class RegisterController {
                 registerPasswordTextField.getText());
 
         if (ValidationHandler.showError(registerErrorLabel, validation)) {
-            initLoginLayout.run();
+            authManager.initRegisterLayout.run();
         }
     }
 
     @FXML
     public void handleShowLoginAction(ActionEvent event){
-        initLoginLayout.run();
+        authManager.initLoginLayout.run();
     }
 }

@@ -8,9 +8,17 @@ import java.util.Arrays;
 import java.util.HashMap;
 
 public class AuthManager {
-    public AuthAccount currentUser;
 
-    public AuthManager() {}
+    public AuthAccount currentUser;
+    public Runnable initRootLayout;
+    public Runnable initLoginLayout;
+    public Runnable initRegisterLayout;
+
+    public AuthManager(Runnable initRootLayout, Runnable initLoginLayout, Runnable initRegisterLayout) {
+        this.initRootLayout = initRootLayout;
+        this.initLoginLayout = initLoginLayout;
+        this.initRegisterLayout = initRegisterLayout;
+    }
 
     public Response login(String username, String password) {
         try {
@@ -18,12 +26,13 @@ public class AuthManager {
             searchQuery.put("username", username);
 
             HashMap<String, String> returnValues = Database.getTable("accounts")
-                    .get(Arrays.asList("hash"), searchQuery);
+                    .get(Arrays.asList("username", "hash"), searchQuery);
 
             if (returnValues.get("hash") == null) {
                 return new Response(false, ValidationHandler.ERROR_AUTH_USERNAME_NONEXISTENT);
             } if (Auth.validate(password, returnValues.get("hash"))) {
-                // current User
+                // Set the current user
+                currentUser = AuthAccount.construct(returnValues);
                 return new Response(true);
             } else {
                 return new Response(false, ValidationHandler.ERROR_AUTH_INVALID);
@@ -54,5 +63,10 @@ public class AuthManager {
             e.printStackTrace();
             return new Response(false, e.getMessage());
         }
+    }
+
+    public void signOut() {
+        currentUser = null;
+        initLoginLayout.run();
     }
 }
