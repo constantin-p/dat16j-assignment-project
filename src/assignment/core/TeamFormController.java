@@ -2,6 +2,7 @@ package assignment.core;
 
 import assignment.model.Player;
 import assignment.model.Team;
+import assignment.util.ValidationHandler;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.ActionEvent;

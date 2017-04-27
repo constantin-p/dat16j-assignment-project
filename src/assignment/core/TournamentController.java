@@ -3,6 +3,7 @@ package assignment.core;
 
 import assignment.model.Team;
 import assignment.model.Tournament;
+import assignment.util.ValidationHandler;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.ActionEvent;

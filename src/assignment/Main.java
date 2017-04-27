@@ -1,10 +1,11 @@
 package assignment;
 
 import assignment.core.CrashController;
+import assignment.core.LoginController;
+import assignment.core.RegisterController;
 import assignment.core.RootController;
-import assignment.db.Database;
-import assignment.util.Auth;
-import assignment.util.Config;
+import assignment.model.AuthAccount;
+import assignment.util.AuthManager;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -16,11 +17,11 @@ import java.io.IOException;
 public class Main extends Application {
 
     public Stage primaryStage;
-
+    private AuthManager authManager = new AuthManager();
 
 
     @Override
-    public void start(Stage primaryStage) throws Exception {
+    public void start(Stage primaryStage) throws Exception{
         this.primaryStage = primaryStage;
 
         // Catch unhandled errors and display the crash
@@ -30,9 +31,11 @@ public class Main extends Application {
         });
 
         try {
-            initRootLayout();
+            initAuthLoginLayout();
         } catch (Throwable throwable) {
             System.out.println("Handler caught exception: " + throwable.getMessage());
+            throwable.printStackTrace();
+
             initCrashLayout(throwable);
         }
     }
@@ -58,11 +61,43 @@ public class Main extends Application {
     }
 
     public void initAuthLoginLayout() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("view/login.fxml"));
+            Parent layout = loader.load();
 
+            primaryStage.setScene(new Scene(layout));
+
+            LoginController controller = loader.getController();
+            controller.initData(authManager, () -> initAuthRegisterLayout(), () -> initRootLayout());
+
+            this.primaryStage.setTitle("Login");
+            primaryStage.setMinHeight(300);
+            primaryStage.setMinWidth(300);
+
+            primaryStage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void initAuthRegisterLayout() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("view/register.fxml"));
+            Parent layout = loader.load();
 
+            primaryStage.setScene(new Scene(layout));
+
+            RegisterController controller = loader.getController();
+            controller.initData(authManager, () -> initAuthLoginLayout());
+
+            this.primaryStage.setTitle("Login");
+            primaryStage.setMinHeight(300);
+            primaryStage.setMinWidth(300);
+
+            primaryStage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void initCrashLayout(Throwable throwable) {

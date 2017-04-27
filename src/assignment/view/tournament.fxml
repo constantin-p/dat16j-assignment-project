@@ -107,9 +107,14 @@
                                             vgrow="NEVER" />
                                         <RowConstraints
                                             fillHeight="false"
-                                            minHeight="30.0"
-                                            prefHeight="43.0"
+                                            minHeight="15.0"
+                                            prefHeight="30.0"
                                             vgrow="ALWAYS" />
+                                        <RowConstraints
+                                            fillHeight="false"
+                                            minHeight="30.0"
+                                            prefHeight="30.0"
+                                            vgrow="NEVER" />
                                         <RowConstraints
                                             fillHeight="false"
                                             maxHeight="15.0"
@@ -154,7 +159,7 @@
                                         <HBox
                                             alignment="CENTER_RIGHT"
                                             GridPane.columnIndex="1"
-                                            GridPane.rowIndex="9">
+                                            GridPane.rowIndex="10">
                                             <children>
                                                 <Button fx:id="infoCancelButton"
                                                     text="Cancel"
