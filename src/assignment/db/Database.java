@@ -1,48 +1,32 @@
 package assignment.db;
 
 import assignment.util.Config;
-import com.mysql.jdbc.PreparedStatement;
 
-import java.sql.*;
-
+import java.sql.Connection;
+import java.sql.DriverManager;
 
 public class Database {
 
-    private Config config = Config.getInstance();
+    private static Config config = Config.getInstance();
+    private static Connection connection = null;
 
-    private Connection connect = null;
-    private Statement statement = null;
-    private PreparedStatement preparedStatement = null;
-    private ResultSet resultSet = null;
-
-    private String url = "jdbc:mysql://" +
+    private static String url = "jdbc:mysql://" +
             config.getProperty("DB_HOST") + ":" +
             config.getProperty("DB_PORT") + "/" +
             config.getProperty("DB_NAME");
 
 
-    private void connect(Runnable job) throws Exception {
+    public static TableHandler getTable(String tableName) throws Exception {
         try {
-            connect = DriverManager.getConnection(url,
+            Class.forName("com.mysql.jdbc.Driver");
+            connection = DriverManager.getConnection(url,
                     config.getProperty("DB_USER"),
                     config.getProperty("DB_PASS"));
 
+            return new TableHandler(tableName, connection);
 
-
-        } catch (Exception e) {
-            throw e;
-        } finally {
-            if (resultSet != null) {
-                resultSet.close();
-            }
-
-            if (statement != null) {
-                statement.close();
-            }
-
-            if (connect != null) {
-                connect.close();
-            }
+        } catch (Exception throwable) {
+            throw throwable;
         }
     }
 }

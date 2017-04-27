@@ -14,11 +14,12 @@ public class ValidationHandler {
     // Error messages
     public static final String ERROR_DB_CONNECTION = "db connection error | x";
 
-    public static final String ERROR_AUTH_INVALID = "wrong username pass | x";
+    public static final String ERROR_AUTH_INVALID = "wrong credentials | x";
     public static final String ERROR_AUTH_USERNAME_REQUIRED = "required username | x";
     public static final String ERROR_AUTH_USERNAME_SHORT = "short username | x";
     public static final String ERROR_AUTH_USERNAME_LONG = "long username | x";
     public static final String ERROR_AUTH_USERNAME_INVALID = "wrong chars username | x";
+    public static final String ERROR_AUTH_USERNAME_NONEXISTENT = "nonexistent username | x";
     public static final String ERROR_AUTH_USERNAME_DUPLICATE = "not unique username | x";
     public static final String ERROR_AUTH_PASSWORD_REQUIRED = "required pass | x";
     public static final String ERROR_AUTH_PASSWORD_SHORT = "short pass | x";

@@ -27,6 +27,7 @@ public class Auth {
         for(int i = 0; i < hash.length && i < testHash.length; i++) {
             diff |= hash[i] ^ testHash[i];
         }
+
         return diff == 0;
     }
 
