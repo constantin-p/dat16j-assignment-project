@@ -1,9 +1,8 @@
 package assignment.core;
 
 import assignment.Main;
+import assignment.db.Database;
 import assignment.model.Tournament;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;

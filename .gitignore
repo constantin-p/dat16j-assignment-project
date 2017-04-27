@@ -2,9 +2,11 @@
 
 # Local configuration file
 local.properties
+sql.config
 
 # IntelliJ:
 /out/
+/lib/
 
 # User-specific stuff:
 .idea/workspace.xml

@@ -1,6 +1,6 @@
 package assignment.core;
 
-import assignment.model.Team;
+
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.ActionEvent;

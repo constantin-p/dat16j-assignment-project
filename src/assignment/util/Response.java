@@ -1,5 +1,4 @@
-package assignment.core;
-
+package assignment.util;
 
 public class Response {
 

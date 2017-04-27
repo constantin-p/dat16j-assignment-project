@@ -11,7 +11,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
-import assignment.core.Response;
+import assignment.util.Response;
 
 public class TeamFormController extends ModalBaseController {
 

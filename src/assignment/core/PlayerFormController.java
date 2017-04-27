@@ -1,7 +1,5 @@
 package assignment.core;
 
-import assignment.model.Player;
-import assignment.core.Response;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.ActionEvent;
@@ -14,6 +12,8 @@ import javafx.stage.Stage;
 import java.time.LocalDate;
 import java.time.ZoneId;
 
+import assignment.model.Player;
+import assignment.util.Response;
 
 public class PlayerFormController extends ModalBaseController {
 
