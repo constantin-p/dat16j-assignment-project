@@ -1,5 +1,8 @@
 *.class
 
+# Local configuration file
+local.properties
+
 # IntelliJ:
 /out/
 
