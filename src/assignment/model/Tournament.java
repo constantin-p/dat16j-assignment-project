@@ -116,7 +116,7 @@ public class Tournament implements Storable {
         try {
             List<HashMap<String, String>> returnList = Database.getTable("tournament_team")
                     .getAll(Arrays.asList("tournament_id", "team_id"),
-                            new HashMap<>(), new HashMap<>());
+                            searchQuery, new HashMap<>());
 
             returnList.forEach((HashMap<String, String> valuesMap) -> {
                 result.add(Team.dbGet(valuesMap.get("team_id")));
