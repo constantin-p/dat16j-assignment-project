@@ -1,6 +1,9 @@
 package assignment.core;
 
+import assignment.db.Database;
+import assignment.util.Auth;
 import assignment.util.ValidationHandler;
+import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.ActionEvent;
@@ -19,6 +22,7 @@ import assignment.util.Response;
 public class PlayerFormController extends ModalBaseController {
 
     private Player player;
+    private boolean create;
 
     @FXML
     private Label playerErrorLabel;
@@ -40,9 +44,10 @@ public class PlayerFormController extends ModalBaseController {
     private BooleanProperty isPlayerDateOfBirthValid = new SimpleBooleanProperty(false);
 
 
-    public PlayerFormController(ModalDispatcher modalDispatcher, Stage stage, Player player) {
+    public PlayerFormController(ModalDispatcher modalDispatcher, Stage stage, Player player, boolean create) {
         super(modalDispatcher, stage);
         this.player = player;
+        this.create = create;
     }
 
     @Override
@@ -83,11 +88,43 @@ public class PlayerFormController extends ModalBaseController {
     }
 
     @Override
+    public void handleOKAction(ActionEvent event) {
+        if (create) {
+            if (Player.dbInsert(player) == 1) {
+                player = Player.dbGetByEmail(player.getEmail());
+                super.handleOKAction(event);
+            }
+            // Error saving the player
+        } else {
+            super.handleOKAction(event);
+        }
+    }
+
+    @Override
     public Player result() {
         if (super.isOKClicked() && !super.isDisabled()) {
             return this.player;
         }
         return null;
+    }
+
+    private Response addPlayer() {
+        try {
+            int returnValue = Database.getTable("players")
+                    .insert(this.player.deconstruct());
+
+            if (returnValue == 1) {
+                return new Response(true);
+            }
+
+            // Invalid response
+            return new Response(false);
+        } catch (MySQLIntegrityConstraintViolationException e) {
+            return new Response(false, ValidationHandler.ERROR_PLAYER_EMAIL_DUPLICATE);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new Response(false, e.getMessage());
+        }
     }
 
 

@@ -1,7 +1,7 @@
 package assignment.core;
 
-import assignment.Main;
 import assignment.db.Database;
+import assignment.model.Player;
 import assignment.model.Tournament;
 import assignment.util.AuthManager;
 import javafx.beans.binding.Bindings;
@@ -18,6 +18,8 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 public class RootController {
@@ -44,13 +46,7 @@ public class RootController {
         statusLabel.setText("Create a tournament from File > New tournament");
         statusLabel.visibleProperty().bind(Bindings.isEmpty(tabPane.getTabs()));
 
-        for (Tournament tournament : tournaments) {
-            Tab tab = new Tab();
-            tab.textProperty().bind(tournament.nameProperty());
-            tab.setContent(loadTabContent(tournament));
-
-            tabPane.getTabs().add(tab);
-        }
+        getTournaments();
     }
 
 
@@ -83,27 +79,50 @@ public class RootController {
    }
 
 
-
-
-
     protected void removeTournament(Tournament tournament) {
         tabPane.getTabs().remove(tournaments.indexOf(tournament));
         tournaments.remove(tournament);
     }
 
-    protected void updateTournamentName(Tournament tournament) {
-        tabPane.getTabs().remove(tournaments.indexOf(tournament));
-        tournaments.remove(tournament);
+    private void getTournaments() {
+        try {
+            List<HashMap<String, String>> returnList = Database.getTable("tournaments")
+                    .getAll(Arrays.asList("id", "name"),
+                            new HashMap<>(), new HashMap<>());
+
+            tabPane.getTabs().clear();
+            tournaments = new ArrayList<>();
+            returnList.forEach((HashMap<String, String> valuesMap) -> {
+                Tournament tournament = Tournament.construct(valuesMap);
+
+                Tab tab = new Tab();
+                tab.textProperty().bind(tournament.nameProperty());
+                tab.setContent(loadTabContent(tournament));
+
+                System.out.println(" Tournament | " + tournament);
+                tournaments.add(tournament);
+                tabPane.getTabs().add(tab);
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     // FXML Action handlers
     // TODO: Disable edit/delete menu options while modals are open
     @FXML
     protected void handleNewTournamentAction(ActionEvent event){
-        Tournament createdTournament = new Tournament("Tournament " + (tournaments.size() + 1));
-        tournaments.add(createdTournament);
+        String name = "Tournament " + (tournaments.size() + 1);
 
-        tabPane.getTabs().add(new Tab(createdTournament.getName(), loadTabContent(createdTournament)));
+        while (Tournament.dbInsert(name) == 0) {
+            name+= "1";
+        }
+
+        Tournament tournament = Tournament.dbGetByName(name);
+        if (tournament != null) {
+            tournaments.add(tournament);
+            tabPane.getTabs().add(new Tab(tournament.getName(), loadTabContent(tournament)));
+        }
     }
 
     @FXML

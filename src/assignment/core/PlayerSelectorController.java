@@ -1,7 +1,9 @@
 package assignment.core;
 
-import assignment.db.MockDBProvider;
+import assignment.db.Database;
 import assignment.model.Player;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -9,9 +11,14 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.stage.Stage;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+
 public class PlayerSelectorController extends ModalBaseController {
 
-    private MockDBProvider mockDB;
+    public ObservableList<Player> players = FXCollections.observableArrayList();
 
     @FXML
     private Button selectorCreateButton;
@@ -22,7 +29,7 @@ public class PlayerSelectorController extends ModalBaseController {
 
     public PlayerSelectorController(ModalDispatcher modalDispatcher, Stage stage) {
         super(modalDispatcher, stage);
-        this.mockDB = new MockDBProvider();
+//        this.mockDB = new MockDBProvider();
     }
 
     @Override
@@ -50,7 +57,10 @@ public class PlayerSelectorController extends ModalBaseController {
         emailColumn.setVisible(false);
         dateOfBirthColumn.setVisible(false);
 
-        selectorTableView.setItems(mockDB.getPlayers());
+        selectorTableView.setItems(players);
+
+        players.clear();
+        players.setAll(Player.dbGetAll());
     }
 
     @Override
@@ -67,7 +77,8 @@ public class PlayerSelectorController extends ModalBaseController {
     public void handleCreateAction(ActionEvent event){
         Player selectedPlayer = super.modalDispatcher.showCreatePlayerModal(super.stage);
         if (selectedPlayer != null) {
-            mockDB.addPlayer(selectedPlayer);
+            players.clear();
+            players.setAll(Player.dbGetAll());
         }
     }
 }

@@ -2,7 +2,6 @@
 
 # Local configuration file
 local.properties
-sql.config
 
 # IntelliJ:
 /out/

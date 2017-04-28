@@ -42,16 +42,29 @@ public class TableHandler {
     }
 
     public HashMap<String, String> get(List<String> selectionColumns,
-                                       HashMap<String, String> query) throws SQLException {
-        List<String> queryValues = new ArrayList<>();
+                                       HashMap<String, String> whitelistQuery,
+                                       HashMap<String, String> blacklistQuery) throws SQLException {
 
-        for (Map.Entry<String, String> querySet : query.entrySet()) {
-            queryValues.add(querySet.getKey() + "='" + querySet.getValue() + "'");
+        String suffix = "";
+        if (!(whitelistQuery.isEmpty() && blacklistQuery.isEmpty())) {
+            List<String> whitelistValues = new ArrayList<>();
+            List<String> blacklistValues = new ArrayList<>();
+
+            for (Map.Entry<String, String> querySet : whitelistQuery.entrySet()) {
+                whitelistValues.add(querySet.getKey() + "='" + querySet.getValue() + "'");
+            }
+
+            for (Map.Entry<String, String> querySet : blacklistQuery.entrySet()) {
+                blacklistValues.add(querySet.getKey() + "<=>'" + querySet.getValue() + "'");
+            }
+            whitelistValues.addAll(blacklistValues);
+            suffix += " WHERE " +
+                    StringUtils.join(whitelistValues, " AND ");
         }
 
         String statement = "SELECT " + StringUtils.join(selectionColumns, ",") +
-                " FROM " + tableName +
-                " WHERE " + StringUtils.join(queryValues, " AND ");
+                " FROM " + tableName + suffix;
+        System.out.println(" get | " + statement);
 
         try {
             preparedStatement = connection.prepareStatement(statement);
@@ -63,6 +76,52 @@ public class TableHandler {
                 for (String column : selectionColumns) {
                     result.put(column, resultSet.getString(column));
                 }
+            }
+            return result;
+        } catch (SQLException throwable) {
+            throw throwable;
+        } finally {
+            close();
+        }
+    }
+
+    public List<HashMap<String, String>> getAll(List<String> selectionColumns,
+                                        HashMap<String, String> whitelistQuery,
+                                        HashMap<String, String> blacklistQuery) throws SQLException {
+
+        String suffix = "";
+        if (!(whitelistQuery.isEmpty() && blacklistQuery.isEmpty())) {
+            List<String> whitelistValues = new ArrayList<>();
+            List<String> blacklistValues = new ArrayList<>();
+
+            for (Map.Entry<String, String> querySet : whitelistQuery.entrySet()) {
+                whitelistValues.add(querySet.getKey() + "='" + querySet.getValue() + "'");
+            }
+
+            for (Map.Entry<String, String> querySet : blacklistQuery.entrySet()) {
+                blacklistValues.add(querySet.getKey() + "<=>'" + querySet.getValue() + "'");
+            }
+            whitelistValues.addAll(blacklistValues);
+            suffix += " WHERE " +
+                    StringUtils.join(whitelistValues, " AND ");
+        }
+
+        String statement = "SELECT " + StringUtils.join(selectionColumns, ",") +
+                " FROM " + tableName + suffix;
+        System.out.println(" getAll | " + statement);
+
+        try {
+            preparedStatement = connection.prepareStatement(statement);
+            resultSet = preparedStatement.executeQuery();
+
+            // Convert the first row of the result into a hash map
+            List<HashMap<String, String>> result = new ArrayList<>();
+            while (resultSet.next()) {
+                HashMap<String, String> row = new HashMap<>();
+                for (String column : selectionColumns) {
+                    row.put(column, resultSet.getString(column));
+                }
+                result.add(row);
             }
             return result;
         } catch (SQLException throwable) {
@@ -88,15 +147,119 @@ public class TableHandler {
         }
 
         String statement = "INSERT INTO " + tableName + "(" + keys + ") VALUES(" + placeholderValues + ")";
+        System.out.println(" insert | " + statement);
 
         try {
             preparedStatement = connection.prepareStatement(statement);
+            // TODO: replace all the values with placeholders
 
             for (int i = 0; i < values.size(); i++) {
                 preparedStatement.setString((i + 1), values.get(i));
             }
 
             /*
+             *  From: https://docs.oracle.com/javase/7/docs/api/java/sql/PreparedStatement.html#executeUpdate()
+             *
+             *  [1..] the row count for SQL Data Manipulation Language (DML) statements
+             *  [0]   for SQL statements that return nothing
+             */
+            return preparedStatement.executeUpdate();
+        } catch (SQLException throwable) {
+            throw throwable;
+        } finally {
+            close();
+        }
+    }
+
+    public int update(HashMap<String, String> rowValuesMap,
+                   HashMap<String, String> whitelistQuery,
+                   HashMap<String, String> blacklistQuery) throws Exception {
+
+        List<String> values = new ArrayList<>();
+
+        String placeholderValues = "";
+        for (Map.Entry<String, String> querySet : rowValuesMap.entrySet()) {
+            placeholderValues += querySet.getKey() + " = ?,";
+            values.add(querySet.getValue());
+        }
+        if (!placeholderValues.isEmpty()) {
+            placeholderValues = placeholderValues.substring(0, placeholderValues.length() - 1);
+        }
+
+        String suffix = "";
+        if (!(whitelistQuery.isEmpty() && blacklistQuery.isEmpty())) {
+            List<String> whitelistValues = new ArrayList<>();
+            List<String> blacklistValues = new ArrayList<>();
+
+            for (Map.Entry<String, String> querySet : whitelistQuery.entrySet()) {
+                whitelistValues.add(querySet.getKey() + "='" + querySet.getValue() + "'");
+            }
+
+            for (Map.Entry<String, String> querySet : blacklistQuery.entrySet()) {
+                blacklistValues.add(querySet.getKey() + "<=>'" + querySet.getValue() + "'");
+            }
+            whitelistValues.addAll(blacklistValues);
+            suffix += " WHERE " +
+                    StringUtils.join(whitelistValues, " AND ");
+        } else {
+            throw new Exception("Empty WHERE clause!");
+        }
+
+        String statement = "UPDATE " + tableName +
+                " SET " + placeholderValues + suffix;
+        System.out.println(" update | " + statement);
+
+        try {
+            preparedStatement = connection.prepareStatement(statement);
+            // TODO: replace all the values with placeholders
+
+            for (int i = 0; i < values.size(); i++) {
+                preparedStatement.setString((i + 1), values.get(i));
+            }
+           /*
+             *  From: https://docs.oracle.com/javase/7/docs/api/java/sql/PreparedStatement.html#executeUpdate()
+             *
+             *  [1..] the row count for SQL Data Manipulation Language (DML) statements
+             *  [0]   for SQL statements that return nothing
+             */
+            return preparedStatement.executeUpdate();
+        } catch (SQLException throwable) {
+            throw throwable;
+        } finally {
+            close();
+        }
+    }
+
+    public int delete(HashMap<String, String> whitelistQuery,
+                      HashMap<String, String> blacklistQuery) throws Exception {
+
+
+        String suffix = "";
+        if (!(whitelistQuery.isEmpty() && blacklistQuery.isEmpty())) {
+            List<String> whitelistValues = new ArrayList<>();
+            List<String> blacklistValues = new ArrayList<>();
+
+            for (Map.Entry<String, String> querySet : whitelistQuery.entrySet()) {
+                whitelistValues.add(querySet.getKey() + "='" + querySet.getValue() + "'");
+            }
+
+            for (Map.Entry<String, String> querySet : blacklistQuery.entrySet()) {
+                blacklistValues.add(querySet.getKey() + "<=>'" + querySet.getValue() + "'");
+            }
+            whitelistValues.addAll(blacklistValues);
+            suffix += " WHERE " +
+                    StringUtils.join(whitelistValues, " AND ");
+        } else {
+            throw new Exception("Empty WHERE clause!");
+        }
+
+        String statement = "DELETE FROM " + tableName + suffix;
+        System.out.println(" get | " + statement);
+
+        try {
+            preparedStatement = connection.prepareStatement(statement);
+
+           /*
              *  From: https://docs.oracle.com/javase/7/docs/api/java/sql/PreparedStatement.html#executeUpdate()
              *
              *  [1..] the row count for SQL Data Manipulation Language (DML) statements

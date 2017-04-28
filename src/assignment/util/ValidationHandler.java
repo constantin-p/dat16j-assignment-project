@@ -49,6 +49,7 @@ public class ValidationHandler {
     public static final String ERROR_PLAYER_LASTNAME_INVALID = "wrong chars lastName | x";
     public static final String ERROR_PLAYER_EMAIL_REQUIRED = "required email | x";
     public static final String ERROR_PLAYER_EMAIL_LONG = "long email | x";
+    public static final String ERROR_PLAYER_EMAIL_DUPLICATE = "not unique email | x";
     public static final String ERROR_PLAYER_EMAIL_INVALID = "invalid email | x";
     public static final String ERROR_PLAYER_DOB_REQUIRED = "required date of birth | x";
     public static final String ERROR_PLAYER_DOB_YOUNG = "young date of birth | x";

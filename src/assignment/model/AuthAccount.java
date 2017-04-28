@@ -27,8 +27,8 @@ public class AuthAccount implements Storable {
     }
 
     /*
-         *  DB integration
-         */
+     *  DB integration
+     */
     @Override
     public HashMap<String, String> deconstruct() {
         HashMap<String, String> values = new HashMap<String, String>();
@@ -48,6 +48,6 @@ public class AuthAccount implements Storable {
     @Override
     public String toString() {
         return this.getClass().getCanonicalName()
-                + "[username: " + this.username + "]";
+                + "[username: " + this.username.getValue() + "]";
     }
 }

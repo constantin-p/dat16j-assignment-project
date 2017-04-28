@@ -17,6 +17,7 @@ import assignment.util.Response;
 public class TeamFormController extends ModalBaseController {
 
     private Team team;
+    private boolean create;
 
     @FXML
     private Label teamErrorLabel;
@@ -33,9 +34,10 @@ public class TeamFormController extends ModalBaseController {
     private Button teamSelectPlayerBButton;
     private BooleanProperty isTeamPlayerBValid = new SimpleBooleanProperty(false);
 
-    public TeamFormController(ModalDispatcher modalDispatcher, Stage stage, Team team) {
+    public TeamFormController(ModalDispatcher modalDispatcher, Stage stage, Team team, boolean create) {
         super(modalDispatcher, stage);
         this.team = team;
+        this.create = create;
     }
 
     @Override
@@ -56,6 +58,19 @@ public class TeamFormController extends ModalBaseController {
                     teamErrorLabel, ValidationHandler.validateTeamName(newValue)));
 
         });
+    }
+
+    @Override
+    public void handleOKAction(ActionEvent event) {
+        if (create) {
+            if (Team.dbInsert(team) == 1) {
+                team = Team.dbGetByName(team.getName());
+                super.handleOKAction(event);
+            }
+            // Error saving the player
+        } else {
+            super.handleOKAction(event);
+        }
     }
 
     @Override
@@ -89,6 +104,7 @@ public class TeamFormController extends ModalBaseController {
         Player selectedPlayer = super.modalDispatcher.showSelectPlayerModal(super.stage);
         Response validation = ValidationHandler.validateTeamPlayer(selectedPlayer);
 
+        System.out.println(" SELECT PLAYER B"+selectedPlayer);
         if (validation.success) {
             team.setPlayerB(selectedPlayer);
             teamSelectPlayerBButton.setText(selectedPlayer.getFirstName() + " " + selectedPlayer.getLastName());

@@ -48,6 +48,19 @@ public class TournamentController {
 
         // Disable he save btn for invalid names
         infoSaveButton.disableProperty().bind(isTournamentNameValid.not());
+
+        teamListView.setCellFactory(param -> new ListCell<Team>() {
+            @Override
+            protected void updateItem(Team item, boolean empty) {
+                super.updateItem(item, empty);
+
+                if (empty || item == null || item.getName() == null) {
+                    setText(null);
+                } else {
+                    setText(item.getName());
+                }
+            }
+        });
     }
 
     public void initData(RootController rootCtrl, Tournament tournament) {
@@ -97,6 +110,8 @@ public class TournamentController {
         infoEditButton.setVisible(true);
         infoSaveButton.setVisible(false);
         infoNameTextField.setDisable(true);
+
+        Tournament.dbUpdate(this.tournament.getId(), this.tournament.getName());
     }
 
     @FXML
@@ -106,6 +121,7 @@ public class TournamentController {
 
     @FXML
     private void handleDeleteAction(ActionEvent event) {
+        Tournament.dbDelete(this.tournament.getId());
         rootCtrl.removeTournament(this.tournament);
     }
 

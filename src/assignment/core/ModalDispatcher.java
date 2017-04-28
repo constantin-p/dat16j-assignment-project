@@ -2,6 +2,8 @@ package assignment.core;
 
 import assignment.model.Player;
 import assignment.model.Team;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -17,6 +19,7 @@ public class ModalDispatcher {
     }
 
     private Stage primaryStage;
+    public BooleanProperty isOpen = new SimpleBooleanProperty(false);
 
     public ModalDispatcher(Stage primaryStage) {
         this.primaryStage = primaryStage;
@@ -43,7 +46,9 @@ public class ModalDispatcher {
 
             // Show the modal, wait until the user closes it
             // and then return the result
+            isOpen.set(true);
             modalStage.showAndWait();
+            isOpen.set(false);
 
             return controller.result();
         } catch (IOException e) {
@@ -61,13 +66,13 @@ public class ModalDispatcher {
 
     protected Team showCreateTeamModal(Stage stage) {
         return (Team) this.showModal(stage, (Stage modalStage) -> {
-                    return new TeamFormController(this, modalStage, new Team());
+                    return new TeamFormController(this, modalStage, new Team(), true);
                 }, "../view/team-form.fxml", "Create a team");
     }
 
     protected Team showEditTeamModal(Stage stage, Team team) {
         return (Team) this.showModal(stage, (Stage modalStage) -> {
-                    return new TeamFormController(this, modalStage, team);
+                    return new TeamFormController(this, modalStage, team, false);
                 }, "../view/team-form.fxml", "Edit");
     }
 
@@ -80,13 +85,13 @@ public class ModalDispatcher {
 
     protected Player showCreatePlayerModal(Stage stage) {
         return (Player) this.showModal(stage, (Stage modalStage) -> {
-            return new PlayerFormController(this, modalStage, new Player());
+            return new PlayerFormController(this, modalStage, new Player(), true);
         }, "../view/player-form.fxml", "Create a player");
     }
 
     protected Player showEditPlayerModal(Stage stage, Player player) {
         return (Player) this.showModal(stage, (Stage modalStage) -> {
-            return new PlayerFormController(this, modalStage, player);
+            return new PlayerFormController(this, modalStage, player, false);
         }, "../view/player-form.fxml", "Edit");
     }
 }

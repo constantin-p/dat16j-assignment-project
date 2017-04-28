@@ -26,7 +26,7 @@ public class AuthManager {
             searchQuery.put("username", username);
 
             HashMap<String, String> returnValues = Database.getTable("accounts")
-                    .get(Arrays.asList("username", "hash"), searchQuery);
+                    .get(Arrays.asList("username", "hash"), searchQuery, new HashMap<>());
 
             if (returnValues.get("hash") == null) {
                 return new Response(false, ValidationHandler.ERROR_AUTH_USERNAME_NONEXISTENT);
