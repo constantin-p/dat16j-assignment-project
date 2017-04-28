@@ -136,7 +136,7 @@ public class Tournament implements Storable {
             HashMap<String, String> returnValues = Database.getTable("tournaments")
                     .get(Arrays.asList("id", "name"), searchQuery, new HashMap<>());
 
-            if (returnValues.get("name").equals(name)) {
+            if (returnValues.get("name") != null && returnValues.get("name").equals(name)) {
                 return Tournament.construct(returnValues);
             }
             return null;

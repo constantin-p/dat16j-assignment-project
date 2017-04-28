@@ -134,7 +134,7 @@ public class Team implements Storable {
                     .get(Arrays.asList("id", "name", "player_a_id", "player_b_id"),
                             searchQuery, new HashMap<>());
 
-            if (returnValues.get("id").equals(id)) {
+            if (returnValues.get("id") != null && returnValues.get("id").equals(id)) {
                 return Team.construct(returnValues);
             }
             return null;
@@ -153,7 +153,7 @@ public class Team implements Storable {
                     .get(Arrays.asList("id", "name", "player_a_id", "player_b_id"),
                             searchQuery, new HashMap<>());
 
-            if (returnValues.get("name").equals(name)) {
+            if (returnValues.get("name") != null && returnValues.get("name").equals(name)) {
                 return Team.construct(returnValues);
             }
             return null;

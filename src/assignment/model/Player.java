@@ -159,7 +159,7 @@ public class Player implements Storable {
                     .get(Arrays.asList("id", "first_name", "last_name", "email", "date_of_birth"),
                             searchQuery, new HashMap<>());
 
-            if (returnValues.get("id").equals(id)) {
+            if (returnValues.get("id") != null && returnValues.get("id").equals(id)) {
                 return Player.construct(returnValues);
             }
             return null;

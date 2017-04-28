@@ -74,7 +74,9 @@ public class TournamentController {
             boolean validString = ValidationHandler.validateControl(infoNameTextField,
                     infoErrorLabel, ValidationHandler.validateTournamentName(newValue));
 
-            if (validString && Tournament.dbGetByName(newValue) == null) {
+            Tournament foundTournament = Tournament.dbGetByName(newValue);
+            if (validString &&
+                    (foundTournament != null && !foundTournament.getName().equals(infoNameSaved))) {
                 isTournamentNameValid.set(ValidationHandler.validateControl(infoNameTextField,
                         infoErrorLabel, new Response(false,
                                 ValidationHandler.ERROR_TOURNAMENT_NAME_DUPLICATE)));
