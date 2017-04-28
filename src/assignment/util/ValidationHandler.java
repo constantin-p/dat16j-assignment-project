@@ -31,6 +31,7 @@ public class ValidationHandler {
     public static final String ERROR_TOURNAMENT_NAME_SHORT = "short name | x";
     public static final String ERROR_TOURNAMENT_NAME_LONG = "long name | x";
     public static final String ERROR_TOURNAMENT_NAME_INVALID = "wrong chars name | x";
+    public static final String ERROR_TOURNAMENT_NAME_DUPLICATE = "not unique name | x";
 
     public static final String ERROR_TEAM_NAME_REQUIRED = "required name | x";
     public static final String ERROR_TEAM_NAME_SHORT = "short name | x";

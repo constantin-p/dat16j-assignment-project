@@ -3,6 +3,7 @@ package assignment.core;
 
 import assignment.model.Team;
 import assignment.model.Tournament;
+import assignment.util.Response;
 import assignment.util.ValidationHandler;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -69,9 +70,17 @@ public class TournamentController {
 
         infoNameTextField.textProperty().bindBidirectional(this.tournament.nameProperty());
         infoNameTextField.textProperty().addListener((observable, oldValue, newValue) -> {
-            isTournamentNameValid.set(ValidationHandler.validateControl(infoNameTextField,
-                    infoErrorLabel, ValidationHandler.validateTournamentName(newValue)));
 
+            boolean validString = ValidationHandler.validateControl(infoNameTextField,
+                    infoErrorLabel, ValidationHandler.validateTournamentName(newValue));
+
+            if (validString && Tournament.dbGetByName(newValue) == null) {
+                isTournamentNameValid.set(ValidationHandler.validateControl(infoNameTextField,
+                        infoErrorLabel, new Response(false,
+                                ValidationHandler.ERROR_TOURNAMENT_NAME_DUPLICATE)));
+            } else {
+                isTournamentNameValid.set(validString);
+            }
         });
 
         teamListView.setItems(tournament.getTeams());

@@ -1,7 +1,6 @@
 package assignment.core;
 
 import assignment.db.Database;
-import assignment.model.Player;
 import assignment.model.Tournament;
 import assignment.util.AuthManager;
 import javafx.beans.binding.Bindings;
@@ -121,7 +120,12 @@ public class RootController {
         Tournament tournament = Tournament.dbGetByName(name);
         if (tournament != null) {
             tournaments.add(tournament);
-            tabPane.getTabs().add(new Tab(tournament.getName(), loadTabContent(tournament)));
+
+            Tab tab = new Tab();
+            tab.textProperty().bind(tournament.nameProperty());
+            tab.setContent(loadTabContent(tournament));
+
+            tabPane.getTabs().add(tab);
         }
     }
 
