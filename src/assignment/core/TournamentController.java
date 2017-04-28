@@ -1,15 +1,21 @@
 package assignment.core;
 
 
+import assignment.model.Match;
 import assignment.model.Team;
 import assignment.model.Tournament;
 import assignment.util.Response;
 import assignment.util.ValidationHandler;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+
+import java.time.LocalDate;
+import java.util.List;
 
 
 public class TournamentController {
@@ -34,9 +40,18 @@ public class TournamentController {
     @FXML
     private Button infoSaveButton;
 
+    @FXML
+    private Button infoStartButton;
+
 
     @FXML
     private ListView teamListView;
+
+    @FXML
+    private TableView matchesTableView;
+
+    @FXML
+    private TableView standingsTableView;
 
     public TournamentController() {}
 
@@ -46,8 +61,9 @@ public class TournamentController {
         infoEditButton.managedProperty().bind(infoEditButton.visibleProperty());
         infoCancelButton.managedProperty().bind(infoCancelButton.visibleProperty());
         infoSaveButton.managedProperty().bind(infoSaveButton.visibleProperty());
+//        infoStartButton.managedProperty().bind(infoSaveButton.visibleProperty());
 
-        // Disable he save btn for invalid names
+        // Disable the save btn for invalid names
         infoSaveButton.disableProperty().bind(isTournamentNameValid.not());
 
         teamListView.setCellFactory(param -> new ListCell<Team>() {
@@ -62,6 +78,24 @@ public class TournamentController {
                 }
             }
         });
+
+
+        TableColumn<Match, String> teamAColumn = new TableColumn("Team A");
+        TableColumn<Match, String> teamBColumn = new TableColumn("Team B");
+        TableColumn<Match, String> goalsAColumn = new TableColumn("Goals T. A");
+        TableColumn<Match, String> goalsBColumn = new TableColumn("Goals T. B");
+        TableColumn<Match, String> dateColumn = new TableColumn("Date");
+
+
+        matchesTableView.getColumns().addAll(teamAColumn, teamBColumn,
+                goalsAColumn, goalsBColumn, dateColumn);
+
+        teamAColumn.setCellValueFactory(cellData -> cellData.getValue().teamA.nameProperty());
+        teamBColumn.setCellValueFactory(cellData -> cellData.getValue().teamB.nameProperty());
+        goalsAColumn.setCellValueFactory(cellData -> cellData.getValue().goalsTeamAProperty().asString());
+        goalsBColumn.setCellValueFactory(cellData -> cellData.getValue().goalsTeamBProperty().asString());
+        dateColumn.setCellValueFactory(cellData -> cellData.getValue().dateProperty().asString());
+
     }
 
     public void initData(RootController rootCtrl, Tournament tournament) {
@@ -86,10 +120,11 @@ public class TournamentController {
         });
 
         teamListView.setItems(tournament.getTeams());
+        matchesTableView.setItems(tournament.getMatches());
+
+        // Disable the start btn if the matches have been generated
+        infoSaveButton.disableProperty().bind(Bindings.isEmpty(tournament.getMatches()).not());
     }
-
-
-
 
     @FXML
     private void handleEditAction(ActionEvent event) {
@@ -127,7 +162,18 @@ public class TournamentController {
 
     @FXML
     private void handleStartAction(ActionEvent event) {
+        List<Team> teams = tournament.teams;
 
+        for (int i = 0; i < teams.size() - 1; i++) {
+            for (int j = i + 1; j < teams.size(); j++) {
+                Team teamA = teams.get(i);
+                Team teamB = teams.get(j);
+                Match match = new Match(tournament.getId(), teamA, teamB, 0, 0, LocalDate.now());
+                if (Match.dbInsert(match) == 1) {
+                    Tournament.dbInsertMatch(tournament.getId(), match.getId());
+                }
+            }
+        }
     }
 
     @FXML

@@ -2,9 +2,6 @@ package assignment.model;
 
 import assignment.db.Database;
 import assignment.db.Storable;
-import assignment.util.Auth;
-import assignment.util.Response;
-import assignment.util.ValidationHandler;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
@@ -20,6 +17,7 @@ public class Tournament implements Storable {
     private String id;
     private StringProperty name;
     public ObservableList<Team> teams = FXCollections.observableArrayList();
+    public ObservableList<Match> matches = FXCollections.observableArrayList();
 
     public Tournament (String id, String name) {
         this.id = id;
@@ -27,6 +25,7 @@ public class Tournament implements Storable {
 
         if (this.id != null) {
             teams.setAll(Tournament.dbGetAllTeams(this.id));
+            matches.setAll(Tournament.dbGetAllMatches(this.id));
         }
     }
 
@@ -58,7 +57,13 @@ public class Tournament implements Storable {
         this.teams = teams;
     }
 
+    public ObservableList<Match> getMatches() {
+        return matches;
+    }
 
+    public void setMatches(ObservableList<Match> matches) {
+        this.matches = matches;
+    }
 
     public void addTeam(Team team) {
         if (Tournament.dbInsertTeam(getId(), team.getId()) == 1) {
@@ -128,6 +133,27 @@ public class Tournament implements Storable {
         }
     }
 
+    public static List<Match> dbGetAllMatches(String id) {
+        List<Match> result = new ArrayList<>();
+
+        HashMap<String, String> searchQuery = new HashMap<>();
+        searchQuery.put("tournament_id", id);
+
+        try {
+            List<HashMap<String, String>> returnList = Database.getTable("tournament_match")
+                    .getAll(Arrays.asList("tournament_id", "match_id"),
+                            searchQuery, new HashMap<>());
+
+            returnList.forEach((HashMap<String, String> valuesMap) -> {
+                result.add(Match.dbGet(valuesMap.get("match_id")));
+            });
+            return result;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return result;
+        }
+    }
+
     public static Tournament dbGetByName(String name) {
         HashMap<String, String> searchQuery = new HashMap<>();
         searchQuery.put("name", name);
@@ -163,6 +189,20 @@ public class Tournament implements Storable {
 
         try {
             return Database.getTable("tournament_team")
+                    .insert(entry);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
+    public static int dbInsertMatch(String tournamentId, String matchId) {
+        HashMap<String, String> entry = new HashMap<>();
+        entry.put("tournament_id", tournamentId);
+        entry.put("match_id", matchId);
+
+        try {
+            return Database.getTable("tournament_match")
                     .insert(entry);
         } catch (Exception e) {
             e.printStackTrace();
