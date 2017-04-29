@@ -1,5 +1,6 @@
 package assignment.util;
 
+import assignment.model.Team;
 import assignment.util.Response;
 import assignment.model.Player;
 import javafx.scene.control.Control;
@@ -153,6 +154,17 @@ public class ValidationHandler {
         return new Response(true);
     }
 
+    public static Response validateTeamDBOperation(int returnValue) {
+        if(returnValue == 1) {
+            return new Response(true);
+        } else if (returnValue == -1) {
+            return new Response(false, ERROR_TEAM_NAME_DUPLICATE);
+        }
+
+        return new Response(false, ValidationHandler.ERROR_DB_CONNECTION);
+    }
+
+
     // Player fields
     public static Response validatePlayerFirstName(String firstName) {
         if(firstName == null || firstName.isEmpty()) {
@@ -198,5 +210,15 @@ public class ValidationHandler {
             return new Response(false, ERROR_PLAYER_DOB_YOUNG);
         }
         return new Response(true);
+    }
+
+    public static Response validatePlayerDBOperation(int returnValue) {
+        if(returnValue == 1) {
+            return new Response(true);
+        } else if (returnValue == -1) {
+            return new Response(false, ERROR_PLAYER_EMAIL_DUPLICATE);
+        }
+
+        return new Response(false, ValidationHandler.ERROR_DB_CONNECTION);
     }
 }

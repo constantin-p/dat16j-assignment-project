@@ -111,16 +111,8 @@
             GridPane.rowIndex="5">
             <children>
                 <Button
-                    text="Don't send"
+                    text="OK"
                     onAction="#handleCancelAction"
-                    mnemonicParsing="false">
-                    <HBox.margin>
-                        <Insets right="15.0" />
-                    </HBox.margin>
-                </Button>
-                <Button
-                    text="Send report"
-                    onAction="#handleSendAction"
                     mnemonicParsing="false" />
             </children>
             <padding>

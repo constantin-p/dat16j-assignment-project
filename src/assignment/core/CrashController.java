@@ -46,11 +46,4 @@ public class CrashController {
     public void handleCancelAction(ActionEvent event) {
         Platform.exit();
     }
-
-    @FXML
-    public void handleSendAction(ActionEvent event) {
-        // TODO: Send report
-        System.out.println("Send report");
-        Platform.exit();
-    }
 }

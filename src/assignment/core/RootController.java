@@ -145,21 +145,21 @@ public class RootController {
         authManager.signOut();
     }
 
-    @FXML
-    public void handleEditPlayerAction(ActionEvent event) {
-//        this.modalDispatcher.showCreatePlayerModal(null);
 
-        Player selectedPlayer = this.modalDispatcher.showSelectPlayerModal();
-        if (selectedPlayer != null) {
-//            tournament.addTeam(selectedTeam);
-        }
-    }
 
     @FXML
     public void handleEditTeamAction(ActionEvent event) {
         Team selectedTeam = this.modalDispatcher.showSelectTeamModal();
         if (selectedTeam != null) {
-//            tournament.addTeam(selectedTeam);
+            this.modalDispatcher.showEditTeamModal(null, selectedTeam);
+        }
+    }
+
+    @FXML
+    public void handleEditPlayerAction(ActionEvent event) {
+        Player selectedPlayer = this.modalDispatcher.showSelectPlayerModal();
+        if (selectedPlayer != null) {
+            this.modalDispatcher.showEditPlayerModal(null, selectedPlayer);
         }
     }
 }

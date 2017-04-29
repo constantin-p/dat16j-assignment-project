@@ -38,11 +38,11 @@
                 <Menu mnemonicParsing="false" text="Edit">
                     <items>
                         <MenuItem
-                            text="Edit Team | x"
+                            text="Edit Team"
                             onAction="#handleEditTeamAction"
                             mnemonicParsing="false" />
                         <MenuItem
-                            text="Edit Player | x"
+                            text="Edit Player"
                             onAction="#handleEditPlayerAction"
                             mnemonicParsing="false" />
                     </items>

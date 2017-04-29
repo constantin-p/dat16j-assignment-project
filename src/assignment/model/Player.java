@@ -2,6 +2,7 @@ package assignment.model;
 
 import assignment.db.Database;
 import assignment.db.Storable;
+import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -217,6 +218,23 @@ public class Player implements Storable {
         try {
             return Database.getTable("players")
                     .insert(player.deconstruct());
+        } catch (MySQLIntegrityConstraintViolationException e) {
+            return -1;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
+    public static int dbUpdate(Player player) {
+        HashMap<String, String> whitelist = new HashMap<>();
+        whitelist.put("id", player.getId());
+
+        try {
+            return Database.getTable("players")
+                    .update(player.deconstruct(), whitelist, new HashMap<>());
+        } catch (MySQLIntegrityConstraintViolationException e) {
+            return -1;
         } catch (Exception e) {
             e.printStackTrace();
             return 0;

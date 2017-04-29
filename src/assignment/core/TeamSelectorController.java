@@ -13,6 +13,7 @@ import javafx.stage.Stage;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class TeamSelectorController extends ModalBaseController {
 
@@ -32,7 +33,7 @@ public class TeamSelectorController extends ModalBaseController {
         this.teamBlacklist = teamBlacklist;
         this.playerBlacklist = playerBlacklist;
 
-        teams.setAll(Team.dbGetAll(teamBlacklist));
+        populateTeamList();
     }
 
     @Override
@@ -69,12 +70,24 @@ public class TeamSelectorController extends ModalBaseController {
     }
 
 
+    private void populateTeamList() {
+        teams.setAll(Team.dbGetAll(teamBlacklist)
+                .stream()
+                .filter(team -> {
+                    // Prevent teams to participate into the same tournament
+                    // and share players
+                    return (!playerBlacklist.contains(team.getPlayerA().getId())
+                            && !playerBlacklist.contains(team.getPlayerB().getId()));
+                })
+                .collect(Collectors.toList()));
+    }
+
     // FXML Action handlers
     @FXML
     public void handleCreateAction(ActionEvent event){
         Team selectedTeam = super.modalDispatcher.showCreateTeamModal(super.stage, playerBlacklist);
         if (selectedTeam != null) {
-            teams.setAll(Team.dbGetAll(teamBlacklist));
+            populateTeamList();
         }
     }
 }
