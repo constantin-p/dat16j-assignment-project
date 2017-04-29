@@ -30,7 +30,6 @@
                         <MenuItem
                             text="New Team | x"
                             mnemonicParsing="false" />
-                        
                         <MenuItem
                             text="New Player | x"
                             mnemonicParsing="false" />
@@ -40,16 +39,11 @@
                     <items>
                         <MenuItem
                             text="Edit Team | x"
+                            onAction="#handleEditTeamAction"
                             mnemonicParsing="false" />
-                        <MenuItem
-                            text="Delete Team | x"
-                            mnemonicParsing="false" />
-                        <SeparatorMenuItem mnemonicParsing="false" />
                         <MenuItem
                             text="Edit Player | x"
-                            mnemonicParsing="false" />
-                        <MenuItem
-                            text="Delete Player | x"
+                            onAction="#handleEditPlayerAction"
                             mnemonicParsing="false" />
                     </items>
                 </Menu>

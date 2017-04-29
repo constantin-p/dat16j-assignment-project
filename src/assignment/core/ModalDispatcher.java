@@ -11,6 +11,8 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ModalDispatcher {
 
@@ -58,30 +60,45 @@ public class ModalDispatcher {
     }
 
     // Team modals: select, create & edit
-    protected Team showSelectTeamModal(Stage stage) {
+    protected Team showSelectTeamModal(Stage stage,
+                   List<String> teamBlacklist, List<String> playerBlacklist) {
         return (Team) this.showModal(stage, (Stage modalStage) -> {
-               return new TeamSelectorController(this, modalStage);
+               return new TeamSelectorController(this, modalStage,
+                       teamBlacklist, playerBlacklist);
             }, "../view/selector.fxml", "Select a team");
     }
 
-    protected Team showCreateTeamModal(Stage stage) {
+    protected Team showSelectTeamModal() {
+        return showSelectTeamModal(null, new ArrayList<>(), new ArrayList<>());
+    }
+
+
+    protected Team showCreateTeamModal(Stage stage, List<String> playerBlacklist) {
         return (Team) this.showModal(stage, (Stage modalStage) -> {
-                    return new TeamFormController(this, modalStage, new Team(), true);
+                    return new TeamFormController(this, modalStage,
+                            playerBlacklist, new Team(), true);
                 }, "../view/team-form.fxml", "Create a team");
     }
 
     protected Team showEditTeamModal(Stage stage, Team team) {
         return (Team) this.showModal(stage, (Stage modalStage) -> {
-                    return new TeamFormController(this, modalStage, team, false);
+                    return new TeamFormController(this, modalStage,
+                            new ArrayList<>(), team, false);
                 }, "../view/team-form.fxml", "Edit");
     }
 
     // Player modals: select, create & edit
-    protected Player showSelectPlayerModal(Stage stage) {
+    protected Player showSelectPlayerModal(Stage stage, List<String> playerBlacklist) {
         return (Player) this.showModal(stage, (Stage modalStage) -> {
-            return new PlayerSelectorController(this, modalStage);
+            return new PlayerSelectorController(this, modalStage,
+                    playerBlacklist);
         }, "../view/selector.fxml", "Select a player");
     }
+
+    protected Player showSelectPlayerModal() {
+        return showSelectPlayerModal(null, new ArrayList<>());
+    }
+
 
     protected Player showCreatePlayerModal(Stage stage) {
         return (Player) this.showModal(stage, (Stage modalStage) -> {

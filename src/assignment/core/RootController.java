@@ -1,6 +1,8 @@
 package assignment.core;
 
 import assignment.db.Database;
+import assignment.model.Player;
+import assignment.model.Team;
 import assignment.model.Tournament;
 import assignment.util.AuthManager;
 import javafx.beans.binding.Bindings;
@@ -45,7 +47,16 @@ public class RootController {
         statusLabel.setText("Create a tournament from File > New tournament");
         statusLabel.visibleProperty().bind(Bindings.isEmpty(tabPane.getTabs()));
 
-        getTournaments();
+        tabPane.getTabs().clear();
+        tournaments = Tournament.dbGetAll();
+        tournaments.forEach(tournament -> {
+
+            Tab tab = new Tab();
+            tab.textProperty().bind(tournament.nameProperty());
+            tab.setContent(loadTabContent(tournament));
+
+            tabPane.getTabs().add(tab);
+        });
     }
 
 
@@ -62,7 +73,7 @@ public class RootController {
     }
 
 
-   private Node loadTabContent(Tournament tournament) {
+    private Node loadTabContent(Tournament tournament) {
        try {
            FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/tournament.fxml"));
            Parent layout = loader.load();
@@ -87,7 +98,7 @@ public class RootController {
         try {
             List<HashMap<String, String>> returnList = Database.getTable("tournaments")
                     .getAll(Arrays.asList("id", "name"),
-                            new HashMap<>(), new HashMap<>());
+                            null, null);
 
             tabPane.getTabs().clear();
             tournaments = new ArrayList<>();
@@ -132,5 +143,23 @@ public class RootController {
     @FXML
     protected void handleSignOutAction(ActionEvent event){
         authManager.signOut();
+    }
+
+    @FXML
+    public void handleEditPlayerAction(ActionEvent event) {
+//        this.modalDispatcher.showCreatePlayerModal(null);
+
+        Player selectedPlayer = this.modalDispatcher.showSelectPlayerModal();
+        if (selectedPlayer != null) {
+//            tournament.addTeam(selectedTeam);
+        }
+    }
+
+    @FXML
+    public void handleEditTeamAction(ActionEvent event) {
+        Team selectedTeam = this.modalDispatcher.showSelectTeamModal();
+        if (selectedTeam != null) {
+//            tournament.addTeam(selectedTeam);
+        }
     }
 }

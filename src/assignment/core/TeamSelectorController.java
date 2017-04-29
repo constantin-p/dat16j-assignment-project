@@ -1,8 +1,7 @@
 package assignment.core;
 
-import assignment.db.MockDBProvider;
-import assignment.model.Player;
 import assignment.model.Team;
+import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -12,11 +11,14 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.stage.Stage;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class TeamSelectorController extends ModalBaseController {
 
-    public ObservableList<Team> teams = FXCollections.observableArrayList();
+    private ObservableList<Team> teams = FXCollections.observableArrayList();
+    private List<String> teamBlacklist = new ArrayList<>();
+    private List<String> playerBlacklist = new ArrayList<>();
 
     @FXML
     private Button selectorCreateButton;
@@ -24,8 +26,13 @@ public class TeamSelectorController extends ModalBaseController {
     @FXML
     private TableView<Team> selectorTableView;
 
-    public TeamSelectorController(ModalDispatcher modalDispatcher, Stage stage) {
+    public TeamSelectorController(ModalDispatcher modalDispatcher, Stage stage, List<String> teamBlacklist, List<String> playerBlacklist) {
         super(modalDispatcher, stage);
+
+        this.teamBlacklist = teamBlacklist;
+        this.playerBlacklist = playerBlacklist;
+
+        teams.setAll(Team.dbGetAll(teamBlacklist));
     }
 
     @Override
@@ -48,8 +55,8 @@ public class TeamSelectorController extends ModalBaseController {
         playerBColumn.setCellValueFactory(cellData -> cellData.getValue().getPlayerB().firstNameProperty());
         selectorTableView.setItems(teams);
 
-        teams.clear();
-        teams.setAll(Team.dbGetAll());
+        super.isDisabledProperty()
+                .bind(Bindings.isNull(selectorTableView.getSelectionModel().selectedItemProperty()));
     }
 
     @Override
@@ -65,10 +72,9 @@ public class TeamSelectorController extends ModalBaseController {
     // FXML Action handlers
     @FXML
     public void handleCreateAction(ActionEvent event){
-        Team selectedTeam = super.modalDispatcher.showCreateTeamModal(super.stage);
+        Team selectedTeam = super.modalDispatcher.showCreateTeamModal(super.stage, playerBlacklist);
         if (selectedTeam != null) {
-            teams.clear();
-            teams.setAll(Team.dbGetAll());
+            teams.setAll(Team.dbGetAll(teamBlacklist));
         }
     }
 }

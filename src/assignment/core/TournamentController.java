@@ -48,19 +48,13 @@ public class TournamentController {
     private ListView teamListView;
 
     @FXML
+    private Button teamAddButton;
+
+    @FXML
     private TableView matchesTableView;
 
     @FXML
     private TableView standingsTableView;
-
-    @FXML
-    private Label scheduleInfoLabel;
-
-    @FXML
-    private Label scheduleStatusLabel;
-
-    @FXML
-    private Button scheduleSaveButton;
 
     public TournamentController() {}
 
@@ -70,7 +64,7 @@ public class TournamentController {
         infoEditButton.managedProperty().bind(infoEditButton.visibleProperty());
         infoCancelButton.managedProperty().bind(infoCancelButton.visibleProperty());
         infoSaveButton.managedProperty().bind(infoSaveButton.visibleProperty());
-//        infoStartButton.managedProperty().bind(infoSaveButton.visibleProperty());
+        infoStartButton.managedProperty().bind(infoStartButton.visibleProperty());
 
         // Disable the save btn for invalid names
         infoSaveButton.disableProperty().bind(isTournamentNameValid.not());
@@ -120,33 +114,18 @@ public class TournamentController {
         // Schedule table
         TableColumn<Match, String> matchesTeamAColumn = new TableColumn("Team A");
         TableColumn<Match, String> matchesTeamBColumn = new TableColumn("Team B");
-        TableColumn<Match, String> matchesResultAColumn = new TableColumn("Result");
+        TableColumn<Match, String> matchesResultColumn = new TableColumn("Result");
         TableColumn<Match, String> matchesDateColumn = new TableColumn("Date");
 
 
         matchesTableView.getColumns().addAll(matchesTeamAColumn, matchesTeamBColumn,
-                matchesResultAColumn, matchesDateColumn);
+                matchesResultColumn, matchesDateColumn);
 
         matchesTeamAColumn.setCellValueFactory(cellData -> cellData.getValue().teamA.nameProperty());
         matchesTeamBColumn.setCellValueFactory(cellData -> cellData.getValue().teamB.nameProperty());
 
-//        matchesResultAColumn.setCellValueFactory((cellData) -> {
-//            Match currentMatch = cellData.getValue();
-//            if (currentMatch.getDate() != null) {
-//                return new SimpleStringProperty(currentMatch.getGoalsTeamA() +
-//                        " - " + currentMatch.getGoalsTeamB());
-//            } else {
-//                return new SimpleStringProperty("TBD");
-//            }
-//        });
         matchesTableView.setEditable(true);
-//        matchesResultAColumn.setCellFactory(TextFieldTableCell.forTableColumn());
-//        matchesResultAColumn.setCellFactory((TableColumn<Match, String> list) -> {
-//            System.out.println(" LIST | " + list);
-//            return  new EditableResultCell<Match, String>();
-//        });
-
-        matchesResultAColumn.setCellFactory(EditableResultCell.forTableColumn(() -> {
+        matchesResultColumn.setCellFactory(EditableResultCell.forTableColumn(() -> {
             // Callback for match updates
             tournament.getMatches().setAll(Tournament.dbGetAllMatches(tournament.getId()));
         }));
@@ -167,8 +146,8 @@ public class TournamentController {
         this.tournament = tournament;
 
         // Disable the start button if the tournament is already running
-        infoStartButton.disableProperty().bind(tournament.isRunningProperty());
-
+        infoStartButton.visibleProperty().bind(tournament.isRunningProperty().not());
+        teamAddButton.disableProperty().bind(tournament.isRunningProperty());
 
         infoNameTextField.textProperty().bindBidirectional(this.tournament.nameProperty());
         infoNameTextField.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -190,13 +169,6 @@ public class TournamentController {
         teamListView.setItems(tournament.getTeams());
         matchesTableView.setItems(tournament.getMatches());
         standingsTableView.setItems(tournament.getStandings());
-
-        // Disable the start btn if the matches have been generated
-//        tournament.getMatches().addListener(() -> {
-//            infoSaveButton.disableProperty().bind(Bindings.isEmpty(tournament.getMatches()).not());
-//        });
-
-        scheduleInfoLabel.textProperty().bind(tournament.isRunningProperty().asString());
     }
 
     @FXML
@@ -260,14 +232,10 @@ public class TournamentController {
 
     @FXML
     public void handleAddAction(ActionEvent event) {
-        Team selectedTeam = this.rootCtrl.modalDispatcher.showSelectTeamModal(null);
+        Team selectedTeam = this.rootCtrl.modalDispatcher.showSelectTeamModal(null,
+                tournament.gatherTeamIDs(), tournament.gatherPlayerIDs());
         if (selectedTeam != null) {
             tournament.addTeam(selectedTeam);
         }
-    }
-
-    @FXML
-    public void handleSaveResultAction(ActionEvent event) {
-
     }
 }

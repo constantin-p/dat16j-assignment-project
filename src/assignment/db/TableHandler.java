@@ -1,15 +1,13 @@
 package assignment.db;
 
 import com.sun.deploy.util.StringUtils;
+import javafx.util.Pair;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class TableHandler {
 
@@ -86,8 +84,16 @@ public class TableHandler {
     }
 
     public List<HashMap<String, String>> getAll(List<String> selectionColumns,
-                                        HashMap<String, String> whitelistQuery,
-                                        HashMap<String, String> blacklistQuery) throws SQLException {
+                                                HashMap<String, String> whitelistQuery,
+                                        List<Pair<String, String>> blacklistQuery) throws SQLException {
+
+        if (whitelistQuery == null) {
+            whitelistQuery = new HashMap<String, String>();
+        }
+
+        if (blacklistQuery == null) {
+            blacklistQuery = new ArrayList<>();
+        }
 
         String suffix = "";
         if (!(whitelistQuery.isEmpty() && blacklistQuery.isEmpty())) {
@@ -98,16 +104,20 @@ public class TableHandler {
                 whitelistValues.add(querySet.getKey() + "='" + querySet.getValue() + "'");
             }
 
-            for (Map.Entry<String, String> querySet : blacklistQuery.entrySet()) {
-                blacklistValues.add(querySet.getKey() + "<=>'" + querySet.getValue() + "'");
+            for (Pair<String, String> querySet : blacklistQuery) {
+                blacklistValues.add(querySet.getKey() + "!='" + querySet.getValue() + "'");
             }
             whitelistValues.addAll(blacklistValues);
             suffix += " WHERE " +
                     StringUtils.join(whitelistValues, " AND ");
+
         }
+
+
 
         String statement = "SELECT " + StringUtils.join(selectionColumns, ",") +
                 " FROM " + tableName + suffix;
+
         System.out.println(" getAll | " + statement);
 
         try {

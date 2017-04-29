@@ -31,16 +31,19 @@ public class Tournament implements Storable {
         this.id = id;
         this.name = new SimpleStringProperty(name);
 
-        if (this.id != null) {
-            teams.setAll(Tournament.dbGetAllTeams(this.id));
-            matches.addListener((ListChangeListener)(c -> {
-                standings.setAll(Standings.computeTable(c.getList()));
-            }));
-
-            matches.setAll(Tournament.dbGetAllMatches(this.id));
-        }
+        matches.addListener((ListChangeListener)(c -> {
+            standings.setAll(Standings.computeTable(c.getList()));
+            gatherTeamIDs();
+            gatherPlayerIDs();
+        }));
 
         isRunning.bind(Bindings.isEmpty(matches).not());
+
+
+        if (this.id != null) {
+            teams.setAll(Tournament.dbGetAllTeams(this.id));
+            matches.setAll(Tournament.dbGetAllMatches(this.id));
+        }
     }
 
     public String getId() {
@@ -83,12 +86,31 @@ public class Tournament implements Storable {
         return isRunning;
     }
 
+
     public void addTeam(Team team) {
         if (Tournament.dbInsertTeam(getId(), team.getId()) == 1) {
             teams.setAll(Tournament.dbGetAllTeams(this.id));
         }
     }
 
+    public List<String> gatherTeamIDs() {
+        List<String> result = new ArrayList<>();
+        teams.forEach(team -> {
+            result.add(team.getId());
+        });
+
+        return result;
+    }
+
+    public List<String> gatherPlayerIDs() {
+        List<String> result = new ArrayList<>();
+        teams.forEach(team -> {
+            result.add(team.getPlayerA().getId());
+            result.add(team.getPlayerB().getId());
+        });
+
+        return result;
+    }
 
     /*
      *  DB integration
@@ -118,7 +140,7 @@ public class Tournament implements Storable {
         try {
             List<HashMap<String, String>> returnList = Database.getTable("tournaments")
                     .getAll(Arrays.asList("id", "name"),
-                            new HashMap<>(), new HashMap<>());
+                            new HashMap<>(), null);
 
             returnList.forEach((HashMap<String, String> valuesMap) -> {
                 result.add(Tournament.construct(valuesMap));
@@ -139,7 +161,7 @@ public class Tournament implements Storable {
         try {
             List<HashMap<String, String>> returnList = Database.getTable("tournament_team")
                     .getAll(Arrays.asList("tournament_id", "team_id"),
-                            searchQuery, new HashMap<>());
+                            searchQuery, null);
 
             returnList.forEach((HashMap<String, String> valuesMap) -> {
                 result.add(Team.dbGet(valuesMap.get("team_id")));
@@ -160,7 +182,7 @@ public class Tournament implements Storable {
         try {
             List<HashMap<String, String>> returnList = Database.getTable("tournament_match")
                     .getAll(Arrays.asList("tournament_id", "match_id"),
-                            searchQuery, new HashMap<>());
+                            searchQuery, null);
 
             returnList.forEach((HashMap<String, String> valuesMap) -> {
                 result.add(Match.dbGet(valuesMap.get("match_id")));

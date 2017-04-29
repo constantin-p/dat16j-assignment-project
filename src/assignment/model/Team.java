@@ -2,15 +2,16 @@ package assignment.model;
 
 import assignment.db.Database;
 import assignment.db.Storable;
+import assignment.util.Response;
+import assignment.util.ValidationHandler;
+import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.util.Pair;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 public class Team implements Storable {
 
@@ -95,7 +96,7 @@ public class Team implements Storable {
     }
 
     public static Team construct(HashMap<String, String> valuesMap) {
-    System.out.println(valuesMap.get("player_a_id")  + " : " + valuesMap.get("player_b_id"));
+
         String id = valuesMap.get("id");
         String name = valuesMap.get("name");
         Player playerA = Player.dbGet(valuesMap.get("player_a_id"));
@@ -113,7 +114,31 @@ public class Team implements Storable {
         try {
             List<HashMap<String, String>> returnList = Database.getTable("teams")
                     .getAll(Arrays.asList("id", "name", "player_a_id", "player_b_id"),
-                            new HashMap<>(), new HashMap<>());
+                            null, null);
+
+            returnList.forEach((HashMap<String, String> valuesMap) -> {
+                result.add(Team.construct(valuesMap));
+            });
+            return result;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return result;
+        }
+    }
+
+    public static List<Team> dbGetAll(List<String> blacklist) {
+        List<Pair<String, String>> blacklistPairs = new ArrayList<>();
+
+        blacklist.forEach(blacklistedId -> {
+            blacklistPairs.add(new Pair<>("id", blacklistedId));
+        });
+
+        List<Team> result = new ArrayList<>();
+
+        try {
+            List<HashMap<String, String>> returnList = Database.getTable("teams")
+                    .getAll(Arrays.asList("id", "name", "player_a_id", "player_b_id"),
+                            null, blacklistPairs);
 
             returnList.forEach((HashMap<String, String> valuesMap) -> {
                 result.add(Team.construct(valuesMap));
@@ -167,6 +192,8 @@ public class Team implements Storable {
         try {
             return Database.getTable("teams")
                     .insert(team.deconstruct());
+        } catch (MySQLIntegrityConstraintViolationException e) {
+            return -1;
         } catch (Exception e) {
             e.printStackTrace();
             return 0;

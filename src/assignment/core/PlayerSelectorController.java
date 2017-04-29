@@ -2,6 +2,7 @@ package assignment.core;
 
 import assignment.db.Database;
 import assignment.model.Player;
+import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -12,13 +13,12 @@ import javafx.scene.control.TableView;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 
 public class PlayerSelectorController extends ModalBaseController {
 
     public ObservableList<Player> players = FXCollections.observableArrayList();
+    private List<String> playerBlacklist = new ArrayList<>();
 
     @FXML
     private Button selectorCreateButton;
@@ -27,9 +27,11 @@ public class PlayerSelectorController extends ModalBaseController {
     private TableView<Player> selectorTableView;
 
 
-    public PlayerSelectorController(ModalDispatcher modalDispatcher, Stage stage) {
+    public PlayerSelectorController(ModalDispatcher modalDispatcher, Stage stage, List<String> playerBlacklist) {
         super(modalDispatcher, stage);
-//        this.mockDB = new MockDBProvider();
+
+        this.playerBlacklist = playerBlacklist;
+        players.setAll(Player.dbGetAll(playerBlacklist));
     }
 
     @Override
@@ -56,11 +58,10 @@ public class PlayerSelectorController extends ModalBaseController {
         selectorTableView.setTableMenuButtonVisible(true);
         emailColumn.setVisible(false);
         dateOfBirthColumn.setVisible(false);
-
         selectorTableView.setItems(players);
 
-        players.clear();
-        players.setAll(Player.dbGetAll());
+        super.isDisabledProperty()
+                .bind(Bindings.isNull(selectorTableView.getSelectionModel().selectedItemProperty()));
     }
 
     @Override
@@ -77,8 +78,7 @@ public class PlayerSelectorController extends ModalBaseController {
     public void handleCreateAction(ActionEvent event){
         Player selectedPlayer = super.modalDispatcher.showCreatePlayerModal(super.stage);
         if (selectedPlayer != null) {
-            players.clear();
-            players.setAll(Player.dbGetAll());
+            players.setAll(Player.dbGetAll(playerBlacklist));
         }
     }
 }

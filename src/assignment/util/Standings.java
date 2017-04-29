@@ -19,7 +19,6 @@ public class Standings {
             resultMap.putIfAbsent(match.getTeamB().getId(), new TeamStats(match.getTeamB()));
 
 
-
             // The match result is set
             if (match.getDate() != null) {
                 TeamStats teamAStats = resultMap.get(match.getTeamA().getId());

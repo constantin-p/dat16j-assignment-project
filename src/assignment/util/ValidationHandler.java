@@ -37,6 +37,7 @@ public class ValidationHandler {
     public static final String ERROR_TEAM_NAME_SHORT = "short name | x";
     public static final String ERROR_TEAM_NAME_LONG = "long name | x";
     public static final String ERROR_TEAM_NAME_INVALID = "wrong chars name | x";
+    public static final String ERROR_TEAM_NAME_DUPLICATE = "not unique name | x";
     public static final String ERROR_TEAM_PLAYER_REQUIRED = "required player | x";
 
 

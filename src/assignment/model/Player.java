@@ -6,6 +6,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.util.Pair;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -138,7 +139,31 @@ public class Player implements Storable {
         try {
             List<HashMap<String, String>> returnList = Database.getTable("players")
                     .getAll(Arrays.asList("id", "first_name", "last_name", "email", "date_of_birth"),
-                            new HashMap<>(), new HashMap<>());
+                            null, null);
+
+            returnList.forEach((HashMap<String, String> valuesMap) -> {
+                result.add(Player.construct(valuesMap));
+            });
+            return result;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return result;
+        }
+    }
+
+    public static List<Player> dbGetAll(List<String> blacklist) {
+        List<Pair<String, String>> blacklistPairs = new ArrayList<>();
+
+        blacklist.forEach(blacklistedId -> {
+            blacklistPairs.add(new Pair<>("id", blacklistedId));
+        });
+
+        List<Player> result = new ArrayList<>();
+
+        try {
+            List<HashMap<String, String>> returnList = Database.getTable("players")
+                    .getAll(Arrays.asList("id", "first_name", "last_name", "email", "date_of_birth"),
+                            null, blacklistPairs);
 
             returnList.forEach((HashMap<String, String> valuesMap) -> {
                 result.add(Player.construct(valuesMap));
