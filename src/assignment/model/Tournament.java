@@ -3,6 +3,7 @@ package assignment.model;
 import assignment.db.Database;
 import assignment.db.Storable;
 import assignment.util.Standings;
+import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -260,6 +261,8 @@ public class Tournament implements Storable {
         try {
             return Database.getTable("tournaments")
                     .update(entry, whitelist, new HashMap<>());
+        } catch (MySQLIntegrityConstraintViolationException e) {
+            return -1;
         } catch (Exception e) {
             e.printStackTrace();
             return 0;

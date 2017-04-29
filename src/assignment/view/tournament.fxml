@@ -19,8 +19,9 @@
 <?import javafx.scene.layout.VBox?>
 
 
-<SplitPane
+<SplitPane fx:id="tournamentSplitPane"
     dividerPositions="0.3"
+    stylesheets="@main.css"
     xmlns="http://javafx.com/javafx/8.0.65"
     xmlns:fx="http://javafx.com/fxml/1"
     fx:controller="assignment.core.TournamentController">
@@ -42,8 +43,7 @@
                         <Tab text="Info">
                             <content>
                                 <GridPane
-                                    hgap="0.0"
-                                    stylesheets="@validation.css">
+                                    hgap="0.0">
                                     <columnConstraints>
                                         <ColumnConstraints
                                             hgrow="NEVER"

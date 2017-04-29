@@ -15,7 +15,7 @@
     maxWidth="-Infinity"
     minHeight="-Infinity"
     minWidth="-Infinity"
-    stylesheets="@validation.css"
+    stylesheets="@main.css"
     xmlns="http://javafx.com/javafx/8.0.65"
     xmlns:fx="http://javafx.com/fxml/1"
     fx:controller="assignment.core.LoginController">

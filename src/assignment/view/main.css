@@ -6,3 +6,8 @@
     -fx-background-color: #FFF0F0;
     -fx-border-color: #DBB1B1;
 }
+
+.validation-clear {
+    -fx-background-color: #F0F0FF;
+    -fx-border-color: blue;
+}

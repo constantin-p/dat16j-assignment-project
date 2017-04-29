@@ -60,11 +60,16 @@ public class ValidationHandler {
     private ValidationHandler() {}
 
     public static boolean validateControl(Control control, Label errorLabel, Response validation) {
+        // Workaround for javafx not updating the node's style classes
+        // after .remove()
+        // http://stackoverflow.com/questions/10887525/javafx-style-class-wont-refresh
         if (showError(errorLabel, validation)) {
             control.getStyleClass().remove("validation-error");
+            control.getStyleClass().add("validation-clear");
             return true;
         } else {
             control.getStyleClass().add("validation-error");
+            control.getStyleClass().remove("validation-clear");
             return false;
         }
     }
@@ -131,6 +136,16 @@ public class ValidationHandler {
             return new Response(false, ERROR_TOURNAMENT_NAME_LONG);
         }
         return new Response(true);
+    }
+
+    public static Response validateTournamentDBOperation(int returnValue) {
+        if(returnValue == 1) {
+            return new Response(true);
+        } else if (returnValue == -1) {
+            return new Response(false, ERROR_TOURNAMENT_NAME_DUPLICATE);
+        }
+
+        return new Response(false, ValidationHandler.ERROR_DB_CONNECTION);
     }
 
     // Team fields
