@@ -108,16 +108,6 @@ public class PlayerFormController extends ModalBaseController {
 
     @Override
     public void handleOKAction(ActionEvent event) {
-//        if (create) {
-//            if (Player.dbInsert(player) == 1) {
-//                player = Player.dbGetByEmail(player.getEmail());
-//                super.handleOKAction(event);
-//            }
-//            // Error saving the player
-//        } else {
-//            super.handleOKAction(event);
-//        }
-
         if (create) {
             boolean success = ValidationHandler.validateControl(playerEmailTextField,
                     playerErrorLabel, ValidationHandler.validatePlayerDBOperation(Player.dbInsert(player)));
@@ -132,6 +122,9 @@ public class PlayerFormController extends ModalBaseController {
 
             if (success) {
                 player = Player.dbGetByEmail(player.getEmail());
+
+                // Update the root UI for edit operations
+                modalDispatcher.updateRootUI();
                 super.handleOKAction(event);
             }
         }

@@ -92,6 +92,9 @@ public class TeamFormController extends ModalBaseController {
 
             if (success) {
                 team = Team.dbGetByName(team.getName());
+
+                // Update the root UI for edit operations
+                modalDispatcher.updateRootUI();
                 super.handleOKAction(event);
             }
         }

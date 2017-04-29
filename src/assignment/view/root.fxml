@@ -28,10 +28,12 @@
                             onAction="#handleNewTournamentAction"
                             mnemonicParsing="false" />
                         <MenuItem
-                            text="New Team | x"
+                            text="New Team"
+                            onAction="#handleNewTeamAction"
                             mnemonicParsing="false" />
                         <MenuItem
-                            text="New Player | x"
+                            text="New Player"
+                            onAction="#handleNewPlayerAction"
                             mnemonicParsing="false" />
                     </items>
                 </Menu>

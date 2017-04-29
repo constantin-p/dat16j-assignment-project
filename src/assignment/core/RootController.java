@@ -47,6 +47,25 @@ public class RootController {
         statusLabel.setText("Create a tournament from File > New tournament");
         statusLabel.visibleProperty().bind(Bindings.isEmpty(tabPane.getTabs()));
 
+        showContentUI();
+    }
+
+
+    public void initData(AuthManager authManager, Stage primaryStage) {
+        this.authManager = authManager;
+        this.modalDispatcher = new ModalDispatcher(primaryStage, () -> showContentUI());
+
+        if (this.authManager.currentUser == null) {
+            authManager.initLoginLayout.run();
+            return;
+        }
+
+        usernameMenuItem.setText(this.authManager.currentUser.getUsername());
+    }
+
+    private void showContentUI() {
+        int lastSelectedTournament = tabPane.getSelectionModel().getSelectedIndex();
+
         tabPane.getTabs().clear();
         tournaments = Tournament.dbGetAll();
         tournaments.forEach(tournament -> {
@@ -57,19 +76,10 @@ public class RootController {
 
             tabPane.getTabs().add(tab);
         });
-    }
 
-
-    public void initData(AuthManager authManager, Stage primaryStage) {
-        this.authManager = authManager;
-        this.modalDispatcher = new ModalDispatcher(primaryStage);
-
-        if (this.authManager.currentUser == null) {
-            authManager.initLoginLayout.run();
-            return;
+        if (lastSelectedTournament < tournaments.size()) {
+            tabPane.getSelectionModel().select(lastSelectedTournament);
         }
-
-        usernameMenuItem.setText(this.authManager.currentUser.getUsername());
     }
 
 
@@ -94,29 +104,6 @@ public class RootController {
         tournaments.remove(tournament);
     }
 
-    private void getTournaments() {
-        try {
-            List<HashMap<String, String>> returnList = Database.getTable("tournaments")
-                    .getAll(Arrays.asList("id", "name"),
-                            null, null);
-
-            tabPane.getTabs().clear();
-            tournaments = new ArrayList<>();
-            returnList.forEach((HashMap<String, String> valuesMap) -> {
-                Tournament tournament = Tournament.construct(valuesMap);
-
-                Tab tab = new Tab();
-                tab.textProperty().bind(tournament.nameProperty());
-                tab.setContent(loadTabContent(tournament));
-
-                System.out.println(" Tournament | " + tournament);
-                tournaments.add(tournament);
-                tabPane.getTabs().add(tab);
-            });
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     // FXML Action handlers
     // TODO: Disable edit/delete menu options while modals are open
@@ -145,6 +132,16 @@ public class RootController {
         authManager.signOut();
     }
 
+
+    @FXML
+    public void handleNewTeamAction(ActionEvent event) {
+        this.modalDispatcher.showCreateTeamModal();
+    }
+
+    @FXML
+    public void handleNewPlayerAction(ActionEvent event) {
+        this.modalDispatcher.showCreatePlayerModal();
+    }
 
 
     @FXML
