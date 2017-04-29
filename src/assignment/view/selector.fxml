@@ -23,12 +23,16 @@
    <children>
       <HBox alignment="CENTER" maxHeight="43.0" minHeight="43.0" GridPane.columnSpan="2147483647">
          <children>
-            <TextField HBox.hgrow="ALWAYS">
+            <TextField fx:id="searchTextField"
+                HBox.hgrow="ALWAYS">
                <HBox.margin>
                   <Insets right="15.0" />
                </HBox.margin>
             </TextField>
-            <Button mnemonicParsing="false" text="Search" />
+            <Button
+                text="Clear"
+                onAction="#handleClearSearchAction"
+                mnemonicParsing="false"/>
          </children>
          <padding>
             <Insets left="15.0" right="15.0" />
@@ -48,7 +52,7 @@
          <children>
             <Button
                     mnemonicParsing="false" text="Cancel"
-            onAction="#handleCancelAction">
+                onAction="#handleCancelAction">
                <HBox.margin>
                   <Insets right="15.0" />
                </HBox.margin>
