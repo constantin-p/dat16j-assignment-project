@@ -3,6 +3,7 @@ package assignment.core;
 
 import assignment.model.Match;
 import assignment.model.Team;
+import assignment.model.TeamStats;
 import assignment.model.Tournament;
 import assignment.util.Response;
 import assignment.util.ValidationHandler;
@@ -10,6 +11,7 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -53,6 +55,15 @@ public class TournamentController {
     @FXML
     private TableView standingsTableView;
 
+    @FXML
+    private Label scheduleInfoLabel;
+
+    @FXML
+    private Label scheduleStatusLabel;
+
+    @FXML
+    private Button scheduleSaveButton;
+
     public TournamentController() {}
 
     @FXML
@@ -65,6 +76,7 @@ public class TournamentController {
 
         // Disable the save btn for invalid names
         infoSaveButton.disableProperty().bind(isTournamentNameValid.not());
+
 
         teamListView.setCellFactory(param -> new ListCell<Team>() {
             @Override
@@ -80,27 +92,72 @@ public class TournamentController {
         });
 
 
-        TableColumn<Match, String> teamAColumn = new TableColumn("Team A");
-        TableColumn<Match, String> teamBColumn = new TableColumn("Team B");
-        TableColumn<Match, String> goalsAColumn = new TableColumn("Goals T. A");
-        TableColumn<Match, String> goalsBColumn = new TableColumn("Goals T. B");
-        TableColumn<Match, String> dateColumn = new TableColumn("Date");
+        // Standings table
+        TableColumn<TeamStats, String> standingsPosColumn = new TableColumn("Pos");
+        TableColumn<TeamStats, String> standingsTeamColumn = new TableColumn("Team");
+        TableColumn<TeamStats, String> standingsPlayedColumn = new TableColumn("Played");
+        TableColumn<TeamStats, String> standingsWonColumn = new TableColumn("Won");
+        TableColumn<TeamStats, String> standingsLostColumn = new TableColumn("Lost");
+        TableColumn<TeamStats, String> standingsGFColumn = new TableColumn("GF");
+        TableColumn<TeamStats, String> standingsGAColumn = new TableColumn("GA");
+        TableColumn<TeamStats, String> standingsGDColumn = new TableColumn("GD");
+
+        standingsTableView.getColumns().addAll(standingsPosColumn, standingsTeamColumn,
+                standingsPlayedColumn, standingsWonColumn, standingsLostColumn,
+                standingsGFColumn, standingsGAColumn, standingsGDColumn);
+
+        standingsPosColumn.setCellValueFactory(cellData ->
+            new SimpleStringProperty(String.valueOf(1 + tournament.getStandings().indexOf(cellData.getValue()))));
 
 
-        matchesTableView.getColumns().addAll(teamAColumn, teamBColumn,
-                goalsAColumn, goalsBColumn, dateColumn);
+        standingsTeamColumn.setCellValueFactory(cellData -> cellData.getValue().getTeam().nameProperty());
+        standingsPlayedColumn.setCellValueFactory(cellData -> cellData.getValue().playedProperty().asString());
+        standingsWonColumn.setCellValueFactory(cellData -> cellData.getValue().winsProperty().asString());
+        standingsLostColumn.setCellValueFactory(cellData -> cellData.getValue().lossesProperty().asString());
+        standingsGFColumn.setCellValueFactory(cellData -> cellData.getValue().goalsForProperty().asString());
+        standingsGAColumn.setCellValueFactory(cellData -> cellData.getValue().goalsAgainstProperty().asString());
+        standingsGDColumn.setCellValueFactory(cellData ->
+                new SimpleStringProperty(String.valueOf(cellData.getValue().getGoalDifference())));
 
-        teamAColumn.setCellValueFactory(cellData -> cellData.getValue().teamA.nameProperty());
-        teamBColumn.setCellValueFactory(cellData -> cellData.getValue().teamB.nameProperty());
-        goalsAColumn.setCellValueFactory(cellData -> cellData.getValue().goalsTeamAProperty().asString());
-        goalsBColumn.setCellValueFactory(cellData -> cellData.getValue().goalsTeamBProperty().asString());
-        dateColumn.setCellValueFactory(cellData -> cellData.getValue().dateProperty().asString());
+        // Schedule table
+        TableColumn<Match, String> matchesTeamAColumn = new TableColumn("Team A");
+        TableColumn<Match, String> matchesTeamBColumn = new TableColumn("Team B");
+        TableColumn<Match, String> matchesResultAColumn = new TableColumn("Result");
+        TableColumn<Match, String> matchesDateColumn = new TableColumn("Date");
 
+
+        matchesTableView.getColumns().addAll(matchesTeamAColumn, matchesTeamBColumn,
+                matchesResultAColumn, matchesDateColumn);
+
+        matchesTeamAColumn.setCellValueFactory(cellData -> cellData.getValue().teamA.nameProperty());
+        matchesTeamBColumn.setCellValueFactory(cellData -> cellData.getValue().teamB.nameProperty());
+
+        matchesResultAColumn.setCellValueFactory((cellData) -> {
+            Match currentMatch = cellData.getValue();
+            if (currentMatch.getDate() != null) {
+                return new SimpleStringProperty(currentMatch.getGoalsTeamA() +
+                        " - " + currentMatch.getGoalsTeamB());
+            } else {
+                return new SimpleStringProperty("TBD");
+            }
+        });
+        matchesDateColumn.setCellValueFactory((cellData) -> {
+            Match currentMatch = cellData.getValue();
+            if (currentMatch.getDate() != null) {
+                return currentMatch.dateProperty().asString();
+            } else {
+                return new SimpleStringProperty("TBD");
+            }
+        });
     }
 
     public void initData(RootController rootCtrl, Tournament tournament) {
         this.rootCtrl = rootCtrl;
         this.tournament = tournament;
+
+        // Disable the start button if the tournament is already running
+        infoStartButton.disableProperty().bind(tournament.isRunningProperty());
+
 
         infoNameTextField.textProperty().bindBidirectional(this.tournament.nameProperty());
         infoNameTextField.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -121,9 +178,14 @@ public class TournamentController {
 
         teamListView.setItems(tournament.getTeams());
         matchesTableView.setItems(tournament.getMatches());
+        standingsTableView.setItems(tournament.getStandings());
 
         // Disable the start btn if the matches have been generated
-        infoSaveButton.disableProperty().bind(Bindings.isEmpty(tournament.getMatches()).not());
+//        tournament.getMatches().addListener(() -> {
+//            infoSaveButton.disableProperty().bind(Bindings.isEmpty(tournament.getMatches()).not());
+//        });
+
+        scheduleInfoLabel.textProperty().bind(tournament.isRunningProperty().asString());
     }
 
     @FXML
@@ -162,18 +224,21 @@ public class TournamentController {
 
     @FXML
     private void handleStartAction(ActionEvent event) {
-        List<Team> teams = tournament.teams;
+        List<Team> teams = tournament.getTeams();
 
         for (int i = 0; i < teams.size() - 1; i++) {
             for (int j = i + 1; j < teams.size(); j++) {
                 Team teamA = teams.get(i);
                 Team teamB = teams.get(j);
-                Match match = new Match(tournament.getId(), teamA, teamB, 0, 0, LocalDate.now());
+                Match match = new Match(tournament.getId(),
+                        teamA, teamB, 0, 0, LocalDate.now());
                 if (Match.dbInsert(match) == 1) {
                     Tournament.dbInsertMatch(tournament.getId(), match.getId());
                 }
             }
         }
+
+        tournament.getMatches().setAll(Tournament.dbGetAllMatches(tournament.getId()));
     }
 
     @FXML
@@ -188,5 +253,10 @@ public class TournamentController {
         if (selectedTeam != null) {
             tournament.addTeam(selectedTeam);
         }
+    }
+
+    @FXML
+    public void handleSaveResultAction(ActionEvent event) {
+
     }
 }

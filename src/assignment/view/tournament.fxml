@@ -273,44 +273,71 @@
                 <TabPane layoutX="108.0" layoutY="99.0" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
               <tabs>
                 <Tab text="Standings">
-                  <content>
-                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                           <children>
-                              <TableView fx:id="standingsTableView"
-                                layoutX="108.0" layoutY="83.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                <columns>
-                                  <TableColumn prefWidth="30.0" text="#" />
-                                  <TableColumn prefWidth="90.0" text="Team" />
-                                    <TableColumn prefWidth="48.0" text="GP" />
-                                    <TableColumn prefWidth="75.0" text="W" />
-                                    <TableColumn prefWidth="75.0" text="L" />
-                                    <TableColumn prefWidth="75.0" text="PTS" />
-                                </columns>
-                                 <columnResizePolicy>
-                                    <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-                                 </columnResizePolicy>
-                              </TableView>
-                           </children>
-                        </AnchorPane>
-                  </content>
-                </Tab>
-                <Tab text="Schedule">
-                  <content>
-                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                           <children>
-                                <TableView fx:id="matchesTableView"
-                                    prefHeight="200.0" prefWidth="200.0"
-                                    AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                    <content>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                            <children>
+                                <TableView fx:id="standingsTableView"
+                                    AnchorPane.bottomAnchor="0.0"
+                                    AnchorPane.leftAnchor="0.0"
+                                    AnchorPane.rightAnchor="0.0"
+                                    AnchorPane.topAnchor="0.0">
                                     <columns>
-                                      
+                                        <!-- COLUMNS -->
                                     </columns>
                                     <columnResizePolicy>
                                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                                     </columnResizePolicy>
                                 </TableView>
+                                
                            </children>
                         </AnchorPane>
-                  </content>
+                    </content>
+                </Tab>
+                <Tab text="Schedule">
+                    <content>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                            <children>
+                                <VBox
+                                    AnchorPane.bottomAnchor="0.0"
+                                    AnchorPane.leftAnchor="0.0"
+                                    AnchorPane.rightAnchor="0.0"
+                                    AnchorPane.topAnchor="0.0">
+                                    <children>
+                                        <TableView fx:id="matchesTableView"
+                                            VBox.vgrow="ALWAYS">
+                                            <columns>
+                                                <!-- COLUMNS -->
+                                            </columns>
+                                            <columnResizePolicy>
+                                                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                                            </columnResizePolicy>
+                                        </TableView>
+                                        <HBox
+                                            alignment="CENTER_RIGHT"
+                                            minHeight="26.0"
+                                            maxHeight="26.0"
+                                            VBox.vgrow="NEVER">
+                                            <children>
+                                                <Label fx:id="scheduleInfoLabel"
+                                                    text="INFO"/>
+                                                <Label fx:id="scheduleStatusLabel"
+                                                    text="STATUS"/>
+                                                <Button fx:id="scheduleSaveButton"
+                                                    text="Save result"
+                                                    onAction="#handleSaveResultAction"
+                                                    mnemonicParsing="false" />
+                                            </children>
+                                            <padding>
+                                                <Insets
+                                                    left="15.0"
+                                                    right="15.0" />
+                                            </padding>
+                                        </HBox>
+                                    </children>
+                                </VBox>
+                            </children>
+                        </AnchorPane>
+                    </content>
                 </Tab>
               </tabs>
                 </TabPane>

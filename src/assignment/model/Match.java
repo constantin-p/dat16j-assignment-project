@@ -105,8 +105,8 @@ public class Match implements Storable {
         values.put("id", this.getId());
         values.put("goals_team_a", this.goalsTeamA.getValue().toString());
         values.put("goals_team_b", this.goalsTeamB.getValue().toString());
-        values.put("date", DateTimeFormatter.ofPattern(DATE_FORMAT)
-                .format(this.date.getValue()));
+//        values.put("date", DateTimeFormatter.ofPattern(DATE_FORMAT)
+//                .format(this.date.getValue()));
 
         return values;
     }
@@ -121,8 +121,11 @@ public class Match implements Storable {
         Team teamA = Team.dbGet(parts[1]);
         Team teamB = Team.dbGet(parts[2]);
 
-        LocalDate date = LocalDate.parse(valuesMap.get("date"),
-                DateTimeFormatter.ofPattern(DATE_FORMAT));
+        String dateString = valuesMap.get("date");
+
+        LocalDate date = (dateString != null)
+                ? LocalDate.parse(valuesMap.get("date"), DateTimeFormatter.ofPattern(DATE_FORMAT))
+                : null;
 
         return new Match(parts[0], teamA, teamB, goals_team_a, goals_team_b, date);
     }

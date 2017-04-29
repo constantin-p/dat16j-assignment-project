@@ -2,9 +2,14 @@ package assignment.model;
 
 import assignment.db.Database;
 import assignment.db.Storable;
+import assignment.util.Standings;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 
 import java.util.ArrayList;
@@ -16,8 +21,11 @@ public class Tournament implements Storable {
 
     private String id;
     private StringProperty name;
-    public ObservableList<Team> teams = FXCollections.observableArrayList();
-    public ObservableList<Match> matches = FXCollections.observableArrayList();
+    private ObservableList<Team> teams = FXCollections.observableArrayList();
+    private ObservableList<Match> matches = FXCollections.observableArrayList();
+    private ObservableList<TeamStats> standings = FXCollections.observableArrayList();
+
+    private BooleanProperty isRunning = new SimpleBooleanProperty(false);
 
     public Tournament (String id, String name) {
         this.id = id;
@@ -25,8 +33,14 @@ public class Tournament implements Storable {
 
         if (this.id != null) {
             teams.setAll(Tournament.dbGetAllTeams(this.id));
+            matches.addListener((ListChangeListener)(c -> {
+                standings.setAll(Standings.computeTable(c.getList()));
+            }));
+
             matches.setAll(Tournament.dbGetAllMatches(this.id));
         }
+
+        isRunning.bind(Bindings.isEmpty(matches).not());
     }
 
     public String getId() {
@@ -53,16 +67,20 @@ public class Tournament implements Storable {
         return teams;
     }
 
-    public void setTeams(ObservableList<Team> teams) {
-        this.teams = teams;
-    }
-
     public ObservableList<Match> getMatches() {
         return matches;
     }
 
-    public void setMatches(ObservableList<Match> matches) {
-        this.matches = matches;
+    public ObservableList<TeamStats> getStandings() {
+        return standings;
+    }
+
+    public boolean isIsRunning() {
+        return isRunning.get();
+    }
+
+    public BooleanProperty isRunningProperty() {
+        return isRunning;
     }
 
     public void addTeam(Team team) {
