@@ -254,7 +254,7 @@ public class TableHandler {
         }
 
         String statement = "DELETE FROM " + tableName + suffix;
-        System.out.println(" get | " + statement);
+        System.out.println(" delete | " + statement);
 
         try {
             preparedStatement = connection.prepareStatement(statement);

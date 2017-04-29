@@ -7,9 +7,7 @@ import assignment.model.TeamStats;
 import assignment.model.Tournament;
 import assignment.util.Response;
 import assignment.util.ValidationHandler;
-import javafx.beans.binding.Bindings;
 import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
@@ -132,15 +130,28 @@ public class TournamentController {
         matchesTeamAColumn.setCellValueFactory(cellData -> cellData.getValue().teamA.nameProperty());
         matchesTeamBColumn.setCellValueFactory(cellData -> cellData.getValue().teamB.nameProperty());
 
-        matchesResultAColumn.setCellValueFactory((cellData) -> {
-            Match currentMatch = cellData.getValue();
-            if (currentMatch.getDate() != null) {
-                return new SimpleStringProperty(currentMatch.getGoalsTeamA() +
-                        " - " + currentMatch.getGoalsTeamB());
-            } else {
-                return new SimpleStringProperty("TBD");
-            }
-        });
+//        matchesResultAColumn.setCellValueFactory((cellData) -> {
+//            Match currentMatch = cellData.getValue();
+//            if (currentMatch.getDate() != null) {
+//                return new SimpleStringProperty(currentMatch.getGoalsTeamA() +
+//                        " - " + currentMatch.getGoalsTeamB());
+//            } else {
+//                return new SimpleStringProperty("TBD");
+//            }
+//        });
+        matchesTableView.setEditable(true);
+//        matchesResultAColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+//        matchesResultAColumn.setCellFactory((TableColumn<Match, String> list) -> {
+//            System.out.println(" LIST | " + list);
+//            return  new EditableResultCell<Match, String>();
+//        });
+
+        matchesResultAColumn.setCellFactory(EditableResultCell.forTableColumn(() -> {
+            // Callback for match updates
+            tournament.getMatches().setAll(Tournament.dbGetAllMatches(tournament.getId()));
+        }));
+
+
         matchesDateColumn.setCellValueFactory((cellData) -> {
             Match currentMatch = cellData.getValue();
             if (currentMatch.getDate() != null) {

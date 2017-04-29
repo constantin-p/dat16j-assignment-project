@@ -88,12 +88,12 @@ public class TeamStats {
     public static int compare(TeamStats ts1, TeamStats ts2) {
         if (ts1.getWins() == ts2.getWins()) {
             if (ts1.getPlayed() == ts2.getPlayed()) {
-                return ts1.getGoalDifference() - ts2.getGoalDifference();
+                return ts2.getGoalDifference() - ts1.getGoalDifference();
             } else {
-                return ts1.getPlayed() - ts2.getPlayed();
+                return ts2.getPlayed() - ts1.getPlayed();
             }
         } else {
-            return ts1.getWins() - ts2.getWins();
+            return ts2.getWins() - ts1.getWins();
         }
     }
 }

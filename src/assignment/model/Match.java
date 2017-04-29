@@ -152,10 +152,30 @@ public class Match implements Storable {
             return null;
         }
     }
+
     public static int dbInsert(Match match) {
         try {
             return Database.getTable("matches")
                     .insert(match.deconstruct());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
+    public static int dbUpdate(String id, String goalsTeamA, String goalsTeamB) {
+        HashMap<String, String> entry = new HashMap<>();
+        entry.put("goals_team_a", goalsTeamA);
+        entry.put("goals_team_b", goalsTeamB);
+        entry.put("date", DateTimeFormatter.ofPattern(DATE_FORMAT)
+                .format(LocalDate.now()));
+
+        HashMap<String, String> whitelist = new HashMap<>();
+        whitelist.put("id", id);
+
+        try {
+            return Database.getTable("matches")
+                    .update(entry, whitelist, new HashMap<>());
         } catch (Exception e) {
             e.printStackTrace();
             return 0;

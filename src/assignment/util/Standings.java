@@ -12,26 +12,18 @@ public class Standings {
     private Standings() { }
 
     public static List<TeamStats> computeTable(List<Match> matches) {
-        Map<Team, TeamStats> resultMap = new HashMap<Team, TeamStats>();
+        Map<String, TeamStats> resultMap = new HashMap<>();
 
-        matches.forEach(match -> {
-            if (resultMap.containsKey(match.getTeamA())) {
-                resultMap.put(match.getTeamA(), new TeamStats(match.getTeamA()));
-            } else {
-                resultMap.put(match.getTeamA(), new TeamStats(match.getTeamA()));
+        for (Match match : matches) {
+            resultMap.putIfAbsent(match.getTeamA().getId(), new TeamStats(match.getTeamA()));
+            resultMap.putIfAbsent(match.getTeamB().getId(), new TeamStats(match.getTeamB()));
 
-                if (resultMap.containsKey(match.getTeamB())) {
-                    resultMap.put(match.getTeamB(), new TeamStats(match.getTeamB()));
-                } else {
-                    resultMap.put(match.getTeamB(), new TeamStats(match.getTeamB()));
-                }
-            }
 
 
             // The match result is set
             if (match.getDate() != null) {
-                TeamStats teamAStats = resultMap.get(match.getTeamA());
-                TeamStats teamBStats = resultMap.get(match.getTeamB());
+                TeamStats teamAStats = resultMap.get(match.getTeamA().getId());
+                TeamStats teamBStats = resultMap.get(match.getTeamB().getId());
 
                 if (match.getGoalsTeamA() > match.getGoalsTeamB()) {
                     teamAStats.addWin(match.getGoalsTeamA(), match.getGoalsTeamB());
@@ -41,10 +33,10 @@ public class Standings {
                     teamAStats.addLoss(match.getGoalsTeamA(), match.getGoalsTeamB());
                 }
 
-                resultMap.replace(match.getTeamA(), teamAStats);
-                resultMap.replace(match.getTeamB(), teamBStats);
+                resultMap.put(match.getTeamA().getId(), teamAStats);
+                resultMap.put(match.getTeamB().getId(), teamBStats);
             }
-        });
+        }
 
         return resultMap.entrySet()
             .stream()
