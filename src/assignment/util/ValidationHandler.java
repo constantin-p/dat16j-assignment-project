@@ -13,49 +13,49 @@ import static java.time.temporal.ChronoUnit.YEARS;
 public class ValidationHandler {
 
     // Error messages
-    public static final String ERROR_DB_CONNECTION = "db connection error | x";
+    public static final String ERROR_DB_CONNECTION = "DB connection error";
 
-    public static final String ERROR_AUTH_INVALID = "wrong credentials | x";
-    public static final String ERROR_AUTH_USERNAME_REQUIRED = "required username | x";
-    public static final String ERROR_AUTH_USERNAME_SHORT = "short username | x";
-    public static final String ERROR_AUTH_USERNAME_LONG = "long username | x";
-    public static final String ERROR_AUTH_USERNAME_INVALID = "wrong chars username | x";
-    public static final String ERROR_AUTH_USERNAME_NONEXISTENT = "nonexistent username | x";
-    public static final String ERROR_AUTH_USERNAME_DUPLICATE = "not unique username | x";
-    public static final String ERROR_AUTH_PASSWORD_REQUIRED = "required pass | x";
-    public static final String ERROR_AUTH_PASSWORD_SHORT = "short pass | x";
-    public static final String ERROR_AUTH_PASSWORD_LONG = "long pass | x";
-    public static final String ERROR_AUTH_PASSWORD_INVALID = "wrong chars pass | x";
-    public static final String ERROR_AUTH_PASSWORD_DIFFERENT = "different pass rpass | x";
+    public static final String ERROR_AUTH_INVALID = "Invalid credentials";
+    public static final String ERROR_AUTH_USERNAME_REQUIRED = "Username required";
+    public static final String ERROR_AUTH_USERNAME_SHORT = "Username too short";
+    public static final String ERROR_AUTH_USERNAME_LONG = "Username too long";
+    public static final String ERROR_AUTH_USERNAME_INVALID = "Invalid username (non-alphanumeric)";
+    public static final String ERROR_AUTH_USERNAME_NONEXISTENT = "Username not registered";
+    public static final String ERROR_AUTH_USERNAME_DUPLICATE = "Username already registered";
+    public static final String ERROR_AUTH_PASSWORD_REQUIRED = "Password required";
+    public static final String ERROR_AUTH_PASSWORD_SHORT = "Password too short";
+    public static final String ERROR_AUTH_PASSWORD_LONG = "Password too long";
+    public static final String ERROR_AUTH_PASSWORD_INVALID = "Invalid password (non-alphanumeric)";
+    public static final String ERROR_AUTH_PASSWORD_DIFFERENT = "Passwords do not match";
 
-    public static final String ERROR_TOURNAMENT_NAME_REQUIRED = "required name | x";
-    public static final String ERROR_TOURNAMENT_NAME_SHORT = "short name | x";
-    public static final String ERROR_TOURNAMENT_NAME_LONG = "long name | x";
-    public static final String ERROR_TOURNAMENT_NAME_INVALID = "wrong chars name | x";
-    public static final String ERROR_TOURNAMENT_NAME_DUPLICATE = "not unique name | x";
+    public static final String ERROR_TOURNAMENT_NAME_REQUIRED = "Name required";
+    public static final String ERROR_TOURNAMENT_NAME_SHORT = "Name too short";
+    public static final String ERROR_TOURNAMENT_NAME_LONG = "Name too long";
+    public static final String ERROR_TOURNAMENT_NAME_INVALID = "Invalid name (non-alphanumeric)";
+    public static final String ERROR_TOURNAMENT_NAME_DUPLICATE = "Name already registered";
 
-    public static final String ERROR_TEAM_NAME_REQUIRED = "required name | x";
-    public static final String ERROR_TEAM_NAME_SHORT = "short name | x";
-    public static final String ERROR_TEAM_NAME_LONG = "long name | x";
-    public static final String ERROR_TEAM_NAME_INVALID = "wrong chars name | x";
-    public static final String ERROR_TEAM_NAME_DUPLICATE = "not unique name | x";
-    public static final String ERROR_TEAM_PLAYER_REQUIRED = "required player | x";
+    public static final String ERROR_TEAM_NAME_REQUIRED = "Name required";
+    public static final String ERROR_TEAM_NAME_SHORT = "Name too short";
+    public static final String ERROR_TEAM_NAME_LONG = "Name too long";
+    public static final String ERROR_TEAM_NAME_INVALID = "Invalid name (non-alphanumeric)";
+    public static final String ERROR_TEAM_NAME_DUPLICATE = "Name already registered";
+    public static final String ERROR_TEAM_PLAYER_REQUIRED = "Player required";
 
 
-    public static final String ERROR_PLAYER_FIRSTNAME_REQUIRED = "required firstName | x";
-    public static final String ERROR_PLAYER_FIRSTNAME_SHORT = "short firstName | x";
-    public static final String ERROR_PLAYER_FIRSTNAME_LONG = "long firstName | x";
-    public static final String ERROR_PLAYER_FIRSTNAME_INVALID = "wrong chars firstName | x";
-    public static final String ERROR_PLAYER_LASTNAME_REQUIRED = "required lastName | x";
-    public static final String ERROR_PLAYER_LASTNAME_SHORT = "short lastName | x";
-    public static final String ERROR_PLAYER_LASTNAME_LONG = "long lastName | x";
-    public static final String ERROR_PLAYER_LASTNAME_INVALID = "wrong chars lastName | x";
-    public static final String ERROR_PLAYER_EMAIL_REQUIRED = "required email | x";
-    public static final String ERROR_PLAYER_EMAIL_LONG = "long email | x";
-    public static final String ERROR_PLAYER_EMAIL_DUPLICATE = "not unique email | x";
-    public static final String ERROR_PLAYER_EMAIL_INVALID = "invalid email | x";
-    public static final String ERROR_PLAYER_DOB_REQUIRED = "required date of birth | x";
-    public static final String ERROR_PLAYER_DOB_YOUNG = "young date of birth | x";
+    public static final String ERROR_PLAYER_FIRSTNAME_REQUIRED = "First name required";
+    public static final String ERROR_PLAYER_FIRSTNAME_SHORT = "First name too short";
+    public static final String ERROR_PLAYER_FIRSTNAME_LONG = "First name too long";
+    public static final String ERROR_PLAYER_FIRSTNAME_INVALID = "Invalid first name (non-alphanumeric)";
+    public static final String ERROR_PLAYER_LASTNAME_REQUIRED = "Last name required";
+    public static final String ERROR_PLAYER_LASTNAME_SHORT = "Last name too short";
+    public static final String ERROR_PLAYER_LASTNAME_LONG = "Last name too long";
+    public static final String ERROR_PLAYER_LASTNAME_INVALID = "Invalid last name (non-alphanumeric)";
+    public static final String ERROR_PLAYER_EMAIL_REQUIRED = "Email required";
+    public static final String ERROR_PLAYER_EMAIL_LONG = "Email too long";
+    public static final String ERROR_PLAYER_EMAIL_DUPLICATE = "Email already registered";
+    public static final String ERROR_PLAYER_EMAIL_INVALID = "Invalid email address";
+    public static final String ERROR_PLAYER_DOB_REQUIRED = "Date of birth required";
+    public static final String ERROR_PLAYER_DOB_YOUNG = "Too young (<6 years)";
 
     private ValidationHandler() {}
 

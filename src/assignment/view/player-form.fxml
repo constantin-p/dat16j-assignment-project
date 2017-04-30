@@ -18,7 +18,7 @@
     minWidth="-Infinity"
     prefHeight="400.0"
     prefWidth="300.0"
-    stylesheets="@validation.css"
+    stylesheets="@main.css"
     xmlns="http://javafx.com/javafx/8.0.65"
     xmlns:fx="http://javafx.com/fxml/1">
     <columnConstraints>
@@ -44,7 +44,7 @@
     <children>
       <Label fx:id="playerErrorLabel"
              styleClass="error-label"
-        text="INFO LABEL" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+        text="" GridPane.columnIndex="1" GridPane.rowIndex="1" />
       <Label text="First name:" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.valignment="BOTTOM">
          <padding>
             <Insets bottom="2.0" />

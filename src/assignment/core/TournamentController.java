@@ -131,6 +131,7 @@ public class TournamentController {
             // Callback for match updates
             tournament.getMatches().setAll(Tournament.dbGetAllMatches(tournament.getId()));
         }));
+        matchesResultColumn.getStyleClass().add("center-column");
 
 
         matchesDateColumn.setCellValueFactory((cellData) -> {

@@ -41,7 +41,7 @@
     <children>
         <Label fx:id="teamErrorLabel"
                styleClass="error-label"
-            text="INFO LABEL" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            text="" GridPane.columnIndex="1" GridPane.rowIndex="1" />
         <Label text="Name:" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.valignment="BOTTOM">
          <padding>
             <Insets bottom="2.0" />

@@ -71,6 +71,7 @@
             </menus>
         </MenuBar>
         <TabPane fx:id="tabPane"
+            styleClass="master"
             tabClosingPolicy="UNAVAILABLE"
             VBox.vgrow="ALWAYS">
             <tabs>
@@ -78,9 +79,10 @@
             </tabs>
         </TabPane>
         <HBox
+            styleClass="status-bar"
             alignment="CENTER_RIGHT"
-            minHeight="26.0"
-            maxHeight="26.0"
+            minHeight="22.0"
+            maxHeight="22.0"
             VBox.vgrow="NEVER">
             <children>
                 <Label fx:id="statusLabel"

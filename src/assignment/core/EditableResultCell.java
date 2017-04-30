@@ -101,7 +101,8 @@ public class EditableResultCell<S, T> extends TableCell<S, T> {
         });
 
 
-        saveButton = new Button("Save");
+        saveButton = new Button("✔");
+        saveButton.getStyleClass().add("btn-save");
         saveButton.disableProperty().bind(isResultValid.not());
 
         saveButton.setOnAction(event -> {

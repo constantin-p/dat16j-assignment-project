@@ -52,7 +52,7 @@ public class RootController {
     @FXML
     private void initialize() {
 
-        statusLabel.setText("Create a tournament from File > New tournament");
+        statusLabel.setText("Create a new tournament from File > New tournament");
         statusLabel.visibleProperty().bind(Bindings.isEmpty(tabPane.getTabs()));
 
         showContentUI();
