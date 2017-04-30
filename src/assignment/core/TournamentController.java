@@ -24,6 +24,9 @@ public class TournamentController {
     private RootController rootCtrl;
 
     @FXML
+    private SplitPane tournamentSplitPane;
+
+    @FXML
     private Label infoErrorLabel;
 
     @FXML
@@ -42,7 +45,6 @@ public class TournamentController {
 
     @FXML
     private Button infoStartButton;
-
 
     @FXML
     private ListView teamListView;
@@ -129,6 +131,7 @@ public class TournamentController {
             // Callback for match updates
             tournament.getMatches().setAll(Tournament.dbGetAllMatches(tournament.getId()));
         }));
+        matchesResultColumn.getStyleClass().add("center-column");
 
 
         matchesDateColumn.setCellValueFactory((cellData) -> {
@@ -144,6 +147,10 @@ public class TournamentController {
     public void initData(RootController rootCtrl, Tournament tournament) {
         this.rootCtrl = rootCtrl;
         this.tournament = tournament;
+
+        // Sync the divider pos between tournament tabs
+        tournamentSplitPane.getDividers().get(0).positionProperty()
+                .bindBidirectional(rootCtrl.dividerPosProperty());
 
         // Disable the start button if the tournament is already running
         infoStartButton.visibleProperty().bind(tournament.isRunningProperty().not());

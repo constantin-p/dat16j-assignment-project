@@ -85,18 +85,48 @@ public class PlayerFormController extends ModalBaseController {
                     playerErrorLabel, ValidationHandler.validatePlayerEmail(newValue)));
 
         });
+
+
+        if (!create) {
+            playerDateOfBirthDatePicker.setValue(player.getDateOfBirth());
+
+            // Validate received data for editing
+            isPlayerFirstNameValid.set(ValidationHandler.validateControl(playerFirstNameTextField,
+                    playerErrorLabel,
+                    ValidationHandler.validatePlayerFirstName(playerFirstNameTextField.getText())));
+            isPlayerLastNameValid.set(ValidationHandler.validateControl(playerLastNameTextField,
+                    playerErrorLabel,
+                    ValidationHandler.validatePlayerLastName(playerLastNameTextField.getText())));
+            isPlayerEmailValid.set(ValidationHandler.validateControl(playerEmailTextField,
+                    playerErrorLabel,
+                    ValidationHandler.validatePlayerEmail(playerEmailTextField.getText())));
+            isPlayerDateOfBirthValid.set(ValidationHandler.validateControl(playerDateOfBirthDatePicker,
+                    playerErrorLabel,
+                    ValidationHandler.validatePlayerDateOfBirth(playerDateOfBirthDatePicker.getValue())));
+        }
     }
 
     @Override
     public void handleOKAction(ActionEvent event) {
         if (create) {
-            if (Player.dbInsert(player) == 1) {
+            boolean success = ValidationHandler.validateControl(playerEmailTextField,
+                    playerErrorLabel, ValidationHandler.validatePlayerDBOperation(Player.dbInsert(player)));
+
+            if (success) {
                 player = Player.dbGetByEmail(player.getEmail());
                 super.handleOKAction(event);
             }
-            // Error saving the player
         } else {
-            super.handleOKAction(event);
+            boolean success = ValidationHandler.validateControl(playerEmailTextField,
+                    playerErrorLabel, ValidationHandler.validatePlayerDBOperation(Player.dbUpdate(player)));
+
+            if (success) {
+                player = Player.dbGetByEmail(player.getEmail());
+
+                // Update the root UI for edit operations
+                modalDispatcher.updateRootUI();
+                super.handleOKAction(event);
+            }
         }
     }
 

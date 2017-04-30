@@ -1,15 +1,15 @@
 package assignment.core;
 
-import assignment.db.Database;
 import assignment.model.Player;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.*;
 import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
@@ -25,6 +25,9 @@ public class PlayerSelectorController extends ModalBaseController {
 
     @FXML
     private TableView<Player> selectorTableView;
+
+    @FXML
+    private TextField searchTextField;
 
 
     public PlayerSelectorController(ModalDispatcher modalDispatcher, Stage stage, List<String> playerBlacklist) {
@@ -58,7 +61,9 @@ public class PlayerSelectorController extends ModalBaseController {
         selectorTableView.setTableMenuButtonVisible(true);
         emailColumn.setVisible(false);
         dateOfBirthColumn.setVisible(false);
-        selectorTableView.setItems(players);
+
+        // Setup search
+        setupSearchFunctionality();
 
         super.isDisabledProperty()
                 .bind(Bindings.isNull(selectorTableView.getSelectionModel().selectedItemProperty()));
@@ -73,6 +78,38 @@ public class PlayerSelectorController extends ModalBaseController {
         return null;
     }
 
+    private void setupSearchFunctionality() {
+        FilteredList<Player> filteredData = new FilteredList<>(players, p -> true);
+
+        searchTextField.textProperty().addListener((observable, oldValue, newValue) -> {
+            filteredData.setPredicate(player -> {
+                // No search term
+                if (newValue == null || newValue.isEmpty()) {
+                    return true;
+                }
+
+                String lowerCaseFilter = newValue.toLowerCase();
+
+                if (player.getFirstName().toLowerCase().contains(lowerCaseFilter)) {
+                    return true;
+                } else if (player.getLastName().toLowerCase().contains(lowerCaseFilter)) {
+                    return true;
+                } else if (player.getEmail().toLowerCase().contains(lowerCaseFilter)) {
+                    return true;
+                } else if (player.getDateOfBirth().toString().toLowerCase().contains(lowerCaseFilter)) {
+                    return true;
+                }
+                return false;
+            });
+        });
+
+        SortedList<Player> sortedData = new SortedList<>(filteredData);
+        sortedData.comparatorProperty().bind(selectorTableView.comparatorProperty());
+
+        selectorTableView.setItems(sortedData);
+    }
+
+
     // FXML Action handlers
     @FXML
     public void handleCreateAction(ActionEvent event){
@@ -80,5 +117,10 @@ public class PlayerSelectorController extends ModalBaseController {
         if (selectedPlayer != null) {
             players.setAll(Player.dbGetAll(playerBlacklist));
         }
+    }
+
+    @FXML
+    public void handleClearSearchAction(ActionEvent event){
+        searchTextField.setText("");
     }
 }

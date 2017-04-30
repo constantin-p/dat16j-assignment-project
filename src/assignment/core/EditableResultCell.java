@@ -49,14 +49,15 @@ public class EditableResultCell<S, T> extends TableCell<S, T> {
 
             if (match.getDate() == null) {
                 if (isEditable((ObservableList<Match>) this.getTableView().getItems(), match)) {
-                    setEditable(true);
+                    super.setEditable(true);
                     startEdit();
                 } else {
-                    setEditable(false);
+                    super.setEditable(false);
                     setText("TBD");
                     setGraphic(null);
                 }
             } else {
+                super.setEditable(false);
                 setText(match.getGoalsTeamA() + " " + DIVIDER_TEXT + " " + match.getGoalsTeamB());
                 setGraphic(null);
             }
@@ -101,7 +102,8 @@ public class EditableResultCell<S, T> extends TableCell<S, T> {
         });
 
 
-        saveButton = new Button("Save");
+        saveButton = new Button("✔");
+        saveButton.getStyleClass().add("btn-save");
         saveButton.disableProperty().bind(isResultValid.not());
 
         saveButton.setOnAction(event -> {

@@ -50,13 +50,23 @@ public class TeamFormController extends ModalBaseController {
     protected void initialize() {
         super.initialize();
 
-        super.isDisabledProperty().bind(
-                isTeamNameValid.not().or(
-                        isTeamPlayerAValid.not().or(
-                                isTeamPlayerBValid.not()
-                        )
-                )
-        );
+        if (!create) {
+            // Players cannot be changed
+            teamSelectPlayerAButton.setDisable(true);
+            teamSelectPlayerBButton.setDisable(true);
+
+            super.isDisabledProperty().bind(
+                    isTeamNameValid.not()
+            );
+        } else {
+            super.isDisabledProperty().bind(
+                    isTeamNameValid.not().or(
+                            isTeamPlayerAValid.not().or(
+                                    isTeamPlayerBValid.not()
+                            )
+                    )
+            );
+        }
 
         teamNameTextField.textProperty().bindBidirectional(team.nameProperty());
         teamNameTextField.textProperty().addListener((observable, oldValue, newValue) -> {
@@ -69,19 +79,24 @@ public class TeamFormController extends ModalBaseController {
     @Override
     public void handleOKAction(ActionEvent event) {
         if (create) {
-            int returnValue = Team.dbInsert(team);
-            if (returnValue == 1) {
+            boolean success = ValidationHandler.validateControl(teamNameTextField,
+                    teamErrorLabel, ValidationHandler.validateTeamDBOperation(Team.dbInsert(team)));
+
+            if (success) {
                 team = Team.dbGetByName(team.getName());
                 super.handleOKAction(event);
-            } else if (returnValue == -1) {
-                ValidationHandler.validateControl(teamNameTextField,
-                        teamErrorLabel, new Response(false, ValidationHandler.ERROR_TEAM_NAME_DUPLICATE));
-            } else {
-                ValidationHandler.validateControl(teamNameTextField,
-                        teamErrorLabel, new Response(false, ValidationHandler.ERROR_DB_CONNECTION));
             }
         } else {
-            super.handleOKAction(event);
+            boolean success = ValidationHandler.validateControl(teamNameTextField,
+                    teamErrorLabel, ValidationHandler.validateTeamDBOperation(Team.dbUpdate(team.getId(), team.getName())));
+
+            if (success) {
+                team = Team.dbGetByName(team.getName());
+
+                // Update the root UI for edit operations
+                modalDispatcher.updateRootUI();
+                super.handleOKAction(event);
+            }
         }
     }
 

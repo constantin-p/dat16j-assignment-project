@@ -1,11 +1,12 @@
 package assignment.core;
 
-import assignment.db.Database;
 import assignment.model.Player;
 import assignment.model.Team;
 import assignment.model.Tournament;
 import assignment.util.AuthManager;
 import javafx.beans.binding.Bindings;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -19,8 +20,6 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 
 public class RootController {
@@ -30,6 +29,8 @@ public class RootController {
     private AuthManager authManager;
     protected ModalDispatcher modalDispatcher;
 
+    private DoubleProperty dividerPos = new SimpleDoubleProperty();
+
     @FXML
     private TabPane tabPane;
 
@@ -37,15 +38,43 @@ public class RootController {
     private MenuItem usernameMenuItem;
 
     @FXML
+    private MenuItem editTeamMenuItem;
+
+    @FXML
+    private MenuItem editPlayerMenuItem;
+
+    @FXML
     private Label statusLabel;
+
 
     public RootController() { }
 
     @FXML
     private void initialize() {
 
-        statusLabel.setText("Create a tournament from File > New tournament");
+        statusLabel.setText("Create a new tournament from File > New tournament");
         statusLabel.visibleProperty().bind(Bindings.isEmpty(tabPane.getTabs()));
+
+        showContentUI();
+    }
+
+
+    public void initData(AuthManager authManager, Stage primaryStage) {
+        this.authManager = authManager;
+        this.modalDispatcher = new ModalDispatcher(primaryStage, () -> showContentUI());
+
+        if (this.authManager.currentUser == null) {
+            authManager.initLoginLayout.run();
+            return;
+        }
+
+        usernameMenuItem.setText(this.authManager.currentUser.getUsername());
+        editTeamMenuItem.disableProperty().bind(modalDispatcher.isOpen);
+        editPlayerMenuItem.disableProperty().bind(modalDispatcher.isOpen);
+    }
+
+    private void showContentUI() {
+        int lastSelectedTournament = tabPane.getSelectionModel().getSelectedIndex();
 
         tabPane.getTabs().clear();
         tournaments = Tournament.dbGetAll();
@@ -57,21 +86,11 @@ public class RootController {
 
             tabPane.getTabs().add(tab);
         });
-    }
 
-
-    public void initData(AuthManager authManager, Stage primaryStage) {
-        this.authManager = authManager;
-        this.modalDispatcher = new ModalDispatcher(primaryStage);
-
-        if (this.authManager.currentUser == null) {
-            authManager.initLoginLayout.run();
-            return;
+        if (lastSelectedTournament < tournaments.size()) {
+            tabPane.getSelectionModel().select(lastSelectedTournament);
         }
-
-        usernameMenuItem.setText(this.authManager.currentUser.getUsername());
     }
-
 
     private Node loadTabContent(Tournament tournament) {
        try {
@@ -88,43 +107,25 @@ public class RootController {
        }
    }
 
-
     protected void removeTournament(Tournament tournament) {
         tabPane.getTabs().remove(tournaments.indexOf(tournament));
         tournaments.remove(tournament);
     }
 
-    private void getTournaments() {
-        try {
-            List<HashMap<String, String>> returnList = Database.getTable("tournaments")
-                    .getAll(Arrays.asList("id", "name"),
-                            null, null);
+    public double getDividerPos() {
+        return dividerPos.get();
+    }
 
-            tabPane.getTabs().clear();
-            tournaments = new ArrayList<>();
-            returnList.forEach((HashMap<String, String> valuesMap) -> {
-                Tournament tournament = Tournament.construct(valuesMap);
-
-                Tab tab = new Tab();
-                tab.textProperty().bind(tournament.nameProperty());
-                tab.setContent(loadTabContent(tournament));
-
-                System.out.println(" Tournament | " + tournament);
-                tournaments.add(tournament);
-                tabPane.getTabs().add(tab);
-            });
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public DoubleProperty dividerPosProperty() {
+        return dividerPos;
     }
 
     // FXML Action handlers
-    // TODO: Disable edit/delete menu options while modals are open
     @FXML
     protected void handleNewTournamentAction(ActionEvent event){
         String name = "Tournament " + (tournaments.size() + 1);
 
-        while (Tournament.dbInsert(name) == 0) {
+        while (Tournament.dbInsert(name) != 1) {
             name+= "1";
         }
 
@@ -145,21 +146,31 @@ public class RootController {
         authManager.signOut();
     }
 
-    @FXML
-    public void handleEditPlayerAction(ActionEvent event) {
-//        this.modalDispatcher.showCreatePlayerModal(null);
 
-        Player selectedPlayer = this.modalDispatcher.showSelectPlayerModal();
-        if (selectedPlayer != null) {
-//            tournament.addTeam(selectedTeam);
-        }
+    @FXML
+    public void handleNewTeamAction(ActionEvent event) {
+        this.modalDispatcher.showCreateTeamModal();
     }
+
+    @FXML
+    public void handleNewPlayerAction(ActionEvent event) {
+        this.modalDispatcher.showCreatePlayerModal();
+    }
+
 
     @FXML
     public void handleEditTeamAction(ActionEvent event) {
         Team selectedTeam = this.modalDispatcher.showSelectTeamModal();
         if (selectedTeam != null) {
-//            tournament.addTeam(selectedTeam);
+            this.modalDispatcher.showEditTeamModal(null, selectedTeam);
+        }
+    }
+
+    @FXML
+    public void handleEditPlayerAction(ActionEvent event) {
+        Player selectedPlayer = this.modalDispatcher.showSelectPlayerModal();
+        if (selectedPlayer != null) {
+            this.modalDispatcher.showEditPlayerModal(null, selectedPlayer);
         }
     }
 }

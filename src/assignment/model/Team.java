@@ -200,6 +200,24 @@ public class Team implements Storable {
         }
     }
 
+    public static int dbUpdate(String id, String name) {
+        HashMap<String, String> entry = new HashMap<>();
+        entry.put("name", name);
+
+        HashMap<String, String> whitelist = new HashMap<>();
+        whitelist.put("id", id);
+
+        try {
+            return Database.getTable("teams")
+                    .update(entry, whitelist, new HashMap<>());
+        } catch (MySQLIntegrityConstraintViolationException e) {
+            return -1;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
     // For debugging
     @Override
     public String toString() {

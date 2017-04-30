@@ -13,7 +13,7 @@ local.properties
 .idea/project-template.xml
 .idea/copyright/
 .idea/dictionaries/
-/*.iml
+# /*.iml
 
 # OS Files
 *.DS_Store

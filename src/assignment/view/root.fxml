@@ -13,6 +13,7 @@
 <VBox
     prefHeight="350.0"
     prefWidth="500.0"
+    stylesheets="@main.css"
     xmlns:fx="http://javafx.com/fxml/1"
     xmlns="http://javafx.com/javafx/8.0.65"
     fx:controller="assignment.core.RootController">
@@ -28,21 +29,23 @@
                             onAction="#handleNewTournamentAction"
                             mnemonicParsing="false" />
                         <MenuItem
-                            text="New Team | x"
+                            text="New Team"
+                            onAction="#handleNewTeamAction"
                             mnemonicParsing="false" />
                         <MenuItem
-                            text="New Player | x"
+                            text="New Player"
+                            onAction="#handleNewPlayerAction"
                             mnemonicParsing="false" />
                     </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Edit">
                     <items>
-                        <MenuItem
-                            text="Edit Team | x"
+                        <MenuItem fx:id="editTeamMenuItem"
+                            text="Edit Team"
                             onAction="#handleEditTeamAction"
                             mnemonicParsing="false" />
-                        <MenuItem
-                            text="Edit Player | x"
+                        <MenuItem fx:id="editPlayerMenuItem"
+                            text="Edit Player"
                             onAction="#handleEditPlayerAction"
                             mnemonicParsing="false" />
                     </items>
@@ -60,14 +63,10 @@
                             mnemonicParsing="false" />
                     </items>
                 </Menu>
-                <Menu mnemonicParsing="false" text="Help">
-                    <items>
-                        <MenuItem mnemonicParsing="false" text="About" />
-                    </items>
-                </Menu>
             </menus>
         </MenuBar>
         <TabPane fx:id="tabPane"
+            styleClass="master"
             tabClosingPolicy="UNAVAILABLE"
             VBox.vgrow="ALWAYS">
             <tabs>
@@ -75,9 +74,10 @@
             </tabs>
         </TabPane>
         <HBox
+            styleClass="status-bar"
             alignment="CENTER_RIGHT"
-            minHeight="26.0"
-            maxHeight="26.0"
+            minHeight="22.0"
+            maxHeight="22.0"
             VBox.vgrow="NEVER">
             <children>
                 <Label fx:id="statusLabel"

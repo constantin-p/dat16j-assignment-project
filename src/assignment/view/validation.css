@@ -1,8 +1,0 @@
-.error-label {
-    -fx-text-fill: red;
-}
-
-.validation-error {
-    -fx-background-color: #FFF0F0;
-    -fx-border-color: #DBB1B1;
-}

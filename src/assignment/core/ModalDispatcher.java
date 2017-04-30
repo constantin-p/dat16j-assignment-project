@@ -21,10 +21,12 @@ public class ModalDispatcher {
     }
 
     private Stage primaryStage;
+    private Runnable updateRequest;
     public BooleanProperty isOpen = new SimpleBooleanProperty(false);
 
-    public ModalDispatcher(Stage primaryStage) {
+    public ModalDispatcher(Stage primaryStage, Runnable updateRequest) {
         this.primaryStage = primaryStage;
+        this.updateRequest = updateRequest;
     }
 
     private Object showModal(Stage stage, ControllerCreator controllerCreator, String templatePath, String title) {
@@ -80,6 +82,11 @@ public class ModalDispatcher {
                 }, "../view/team-form.fxml", "Create a team");
     }
 
+    protected Team showCreateTeamModal() {
+        return showCreateTeamModal(null, new ArrayList<>());
+    }
+
+
     protected Team showEditTeamModal(Stage stage, Team team) {
         return (Team) this.showModal(stage, (Stage modalStage) -> {
                     return new TeamFormController(this, modalStage,
@@ -99,16 +106,23 @@ public class ModalDispatcher {
         return showSelectPlayerModal(null, new ArrayList<>());
     }
 
-
     protected Player showCreatePlayerModal(Stage stage) {
         return (Player) this.showModal(stage, (Stage modalStage) -> {
             return new PlayerFormController(this, modalStage, new Player(), true);
         }, "../view/player-form.fxml", "Create a player");
     }
 
+    protected Player showCreatePlayerModal() {
+        return showCreatePlayerModal(null);
+    }
+
     protected Player showEditPlayerModal(Stage stage, Player player) {
         return (Player) this.showModal(stage, (Stage modalStage) -> {
             return new PlayerFormController(this, modalStage, player, false);
         }, "../view/player-form.fxml", "Edit");
+    }
+
+    protected void updateRootUI() {
+        this.updateRequest.run();
     }
 }

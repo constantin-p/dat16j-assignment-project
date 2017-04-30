@@ -15,7 +15,7 @@
     maxWidth="-Infinity"
     minHeight="-Infinity"
     minWidth="-Infinity"
-    stylesheets="@validation.css"
+    stylesheets="@main.css"
     xmlns="http://javafx.com/javafx/8.0.65"
     xmlns:fx="http://javafx.com/fxml/1"
     fx:controller="assignment.core.LoginController">
@@ -93,7 +93,7 @@
     <children>
         <Label fx:id="loginErrorLabel"
             styleClass="error-label"
-            text="INFO LABEL"
+            text=""
             GridPane.columnIndex="1"
             GridPane.rowIndex="1" />
         <Label
@@ -122,6 +122,7 @@
             GridPane.rowIndex="5" />
         <Button fx:id="submitButton"
             text="Login"
+            styleClass="btn-primary"
             onAction="#handleLoginAction"
             mnemonicParsing="false"
             GridPane.columnIndex="1"
@@ -129,6 +130,7 @@
             GridPane.rowIndex="7" />
         <Button
             text="Register"
+            styleClass="btn-text"
             onAction="#handleShowRegisterAction"
             mnemonicParsing="false"
             maxWidth="1.7976931348623157E308"
