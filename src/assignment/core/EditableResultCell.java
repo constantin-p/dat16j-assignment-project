@@ -43,10 +43,11 @@ public class EditableResultCell<S, T> extends TableCell<S, T> {
             :(Match) this.getTableRow().getItem();
 
         if (empty || match == null) {
+            super.setEditable(false);
+
             setText(null);
             setGraphic(null);
         } else {
-
             if (match.getDate() == null) {
                 if (isEditable((ObservableList<Match>) this.getTableView().getItems(), match)) {
                     super.setEditable(true);

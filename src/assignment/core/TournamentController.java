@@ -205,6 +205,7 @@ public class TournamentController {
 
     @FXML
     private void handleSaveAction(ActionEvent event) {
+        infoCancelButton.setVisible(false);
         infoEditButton.setVisible(true);
         infoSaveButton.setVisible(false);
         infoNameTextField.setDisable(true);

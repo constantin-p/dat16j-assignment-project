@@ -112,7 +112,7 @@
                                                     vgrow="NEVER" />
                                             </rowConstraints>
                                             <children>
-                                                <Label fx:id="infoErrorLabel" styleClass="error-label" text="INFO LABEL" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                                <Label fx:id="infoErrorLabel" styleClass="error-label" text="" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                                               <Label text="Tournament name:" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.valignment="BOTTOM">
                                                   <padding>
                                                       <Insets bottom="3.0" />
