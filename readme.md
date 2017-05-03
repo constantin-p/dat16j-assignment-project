@@ -7,4 +7,4 @@ https://github.com/constantin-p/dat16j-assignment-project
 - Codrin Stefan
 
 
-For instalation see template_local.properties & sql.config
+For installation see template_local.properties & sql.config
